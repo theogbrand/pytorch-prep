@@ -21,3 +21,12 @@ print(rand_tens)
 print(ones)
 print(zeroes)
 
+d = [[1.1, 2.1, 9.9], [3.1, 4.1, 9.9], [5.1, 5.6, 9.9]]
+t = torch.tensor(d)
+print(f"original tensor:", t)
+print(f"first row: {t[0]}")
+print(f"first col: {t[:, 0]}")
+print(f"last col: {t[..., -1]}")
+
+t[:,-1] = 0 
+print(f"original tensor after edit:", t)

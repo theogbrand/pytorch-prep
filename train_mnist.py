@@ -47,6 +47,9 @@ class NeuralNetwork(nn.Module):
     def forward(self, x):
         x = self.flatten(x) # 
         logits = self.linear_relu_network(x)
+        # softmax = nn.Softmax(dim=1)
+        # pred_proba = softmax(logits)
+        # print(f"pred_proba {pred_proba}")
         return logits
 
 model = NeuralNetwork().to(device)

@@ -70,16 +70,33 @@ def train(dataloader, model, loss_fn, optimizer):
         optimizer.step()
         optimizer.zero_grad() # clear for next step
 
-        if batch % 100 == 0:
-            loss, current = loss.item(), (batch+1) * len(X) # total optimizer steps needed
+        if batch % 100 == 0: # every 100 optimizer steps
+            loss, current = loss.item(), (batch+1) * len(X) # extract current loss, current batch size
             print(f"loss: {loss:>7f}, current: [{current:>5d}/{size:>5d}]")
         
 
-# def test(dataloader, model, loss_fn):
+def test(dataloader, model, loss_fn):
+    size = len(dataloader.dataset)
+    num_batches = len(dataloader)
 
-epochs = 2
+    model.eval()
+    test_loss, correct = 0, 0
+    with torch.no_grad():
+        for X, y in dataloader:
+            X, y = X.to(device), y.to(device)
+            pred = model(X)
+            test_loss += loss_fn(pred, y).item()
+            correct += (pred.argmax(1) == y).type(torch.float).sum().item()
+
+    ave_loss = test_loss / num_batches
+    acc = correct / size
+
+    print(f"Test Accuracy: {(100*acc):>0.1f}%, Avg Loss: {ave_loss:>8f}\n")
+
+
+epochs = 5
 for t in range(epochs):
     print(f"Epoch {t+1}\n----------------------------")
     train(train_dataloader, model, loss_fn, optim)
-
+    test(test_dataloader, model, loss_fn)
 print("DONE!")

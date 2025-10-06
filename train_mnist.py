@@ -62,12 +62,12 @@ def train(dataloader, model, loss_fn, optimizer):
         X, y = X.to(device), y.to(device)
 
         # prepare loss computation
-        pred = model(X) # computes activations for batch
+        pred = model(X) # computes activations for batch, this is the most mem intensive, in Grad Accum, we refer to accum grads across batches to prevent loading single large batch of activations at once
         loss = loss_fn(pred, y)
 
         # backprop
-        loss.backward()
-        optimizer.step()
+        loss.backward() # computes gradient for step, accumulates across batches (if any)
+        optimizer.step() # parameters are stored here
         optimizer.zero_grad() # clear for next step
 
         if batch % 100 == 0: # every 100 optimizer steps
@@ -84,7 +84,7 @@ def test(dataloader, model, loss_fn):
     with torch.no_grad():
         for X, y in dataloader:
             X, y = X.to(device), y.to(device)
-            pred = model(X)
+            pred = model(X) # shape (batch_size, 10)
             test_loss += loss_fn(pred, y).item()
             correct += (pred.argmax(1) == y).type(torch.float).sum().item()
 
@@ -100,3 +100,25 @@ for t in range(epochs):
     train(train_dataloader, model, loss_fn, optim)
     test(test_dataloader, model, loss_fn)
 print("DONE!")
+
+
+classes = [
+    "T-shirt/top",
+    "Trouser",
+    "Pullover",
+    "Dress",
+    "Coat",
+    "Sandal",
+    "Shirt",
+    "Sneaker",
+    "Bag",
+    "Ankle boot",
+]
+
+model.eval()
+x, y = test_data[99][0], test_data[99][1] # x is a 1D tensor (no batch dim), not X
+with torch.no_grad():
+    x = x.to(device) # shape (10,)
+    pred = model(x)
+    predicted, actual = classes[pred[0].argmax(0)], classes[y]
+    print(f'Predicted: "{predicted}", Actual: "{actual}"')

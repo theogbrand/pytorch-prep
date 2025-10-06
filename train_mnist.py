@@ -56,5 +56,30 @@ loss_fn = nn.CrossEntropyLoss()
 optim = torch.optim.SGD(model.parameters(), lr=1e-3)
 
 def train(dataloader, model, loss_fn, optimizer):
-    
-def test(dataloader, model, loss_fn):
+    size = len(dataloader.dataset)
+
+    for batch, (X, y) in enumerate(dataloader):
+        X, y = X.to(device), y.to(device)
+
+        # prepare loss computation
+        pred = model(X) # computes activations for batch
+        loss = loss_fn(pred, y)
+
+        # backprop
+        loss.backward()
+        optimizer.step()
+        optimizer.zero_grad() # clear for next step
+
+        if batch % 100 == 0:
+            loss, current = loss.item(), (batch+1) * len(X) # total optimizer steps needed
+            print(f"loss: {loss:>7f}, current: [{current:>5d}/{size:>5d}]")
+        
+
+# def test(dataloader, model, loss_fn):
+
+epochs = 2
+for t in range(epochs):
+    print(f"Epoch {t+1}\n----------------------------")
+    train(train_dataloader, model, loss_fn, optim)
+
+print("DONE!")

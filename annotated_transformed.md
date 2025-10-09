@@ -10,6 +10,8 @@ Word Embedding Algorithm used to convert words (text) from a Vocabulary to a cor
     - 2-layer neural network, input_sz = output_sz = vocab_size (order of 10K, 100K); hidden_sz = embedding_sz (order of 300, 200, 100)
     - Hidden layer actually becomes the word embedding vector we use, and the num_neurons/features is a Hyperparameter we determine 
 - Trained using hierarchical softmax (or negative sampling) to learn dense, low-dimensional word embeddings from the high dimensional, sparse one-hot encoded input vocab
+- Once trained, the Word Embedding of a word is an O(1) operation on the embedding matrix
+- to revisit math
 
 Encoders identical in containing self-attention layer and FFNN layer. Point of self-attention 
 

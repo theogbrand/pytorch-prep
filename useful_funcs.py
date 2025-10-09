@@ -48,3 +48,7 @@ print(f"torch.stack t1 dim=0: {s1}")
 # Convert to one-hot encoding
 target_transform = Lambda(lambda y: torch.zeros(
     10, dtype=torch.float).scatter_(dim=0, index=torch.tensor(y), value=1))
+
+def flatten(x: torch.Tensor) -> torch.Tensor:
+    y = x.view(-1)
+    return y

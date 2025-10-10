@@ -15,4 +15,11 @@ Word Embedding Algorithm used to convert words (text) from a Vocabulary to a cor
 
 Encoders identical in containing self-attention layer and FFNN layer. Point of self-attention 
 
+# Self-Attention Layer
+1. After going through the embedding algorithm, the vectors approach the query, key, and value weight matrices that are created during training. 
+ - This is where we take the *dot product of each word vector with the q, k, and v* weight matrices (Wq, Wk, Wv), Returning the vector projection of each word embedding into the query, key, and value spaces. (qi, ki, vi, where i is the word index corresponding to its embedding - every word gets its own query, key, and value vectors)
 
+2. *Scaled Dot-Product Attention* "Score"
+    - This determines how much attention to pay in the sentence with respect to this word itself and the other words in the sentence. (the "self" in self-attention)
+    - Calculated by dot product of query and key vectors (qk), and scaled by dk**0.5 (for numerical stability)
+    - Every word has a **score** with respect to every other word in the sentence. (Hence *n-squared scores for a sentence of length n, and the quadratic problem*)

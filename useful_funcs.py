@@ -59,3 +59,6 @@ def transpose_and_reverse(x: torch.Tensor) -> torch.Tensor:
     # reverse rows to columns
     result = torch.transpose(input=x, dim0=0, dim1=1) # dim0 and dim1 are swapped during transpose
     return result
+
+def slice_and_sum(x: torch.Tensor) -> torch.Tensor:
+    return torch.sum(x[::2], dim=1)

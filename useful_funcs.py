@@ -71,3 +71,19 @@ print(F.softmax(x, dim=1))
 print(F.softmax(x,dim=0))
 # tensor([[0.5000, 0.0474, 0.5000],
 #         [0.5000, 0.9526, 0.5000]])
+
+x = torch.tensor([[1.0, 2.0, 3.0], [1.0, 5.0, 3.0]])
+x # flattens and averages across if no dim specified
+# tensor([[1., 2., 3.],
+#         [1., 5., 3.]])
+torch.mean(x) 
+# tensor(2.5000)
+torch.mean(x, 1)
+# tensor([2., 3.])
+
+# "Pure" tensor-based variance calculation
+t = torch.tensor([1,2,3])
+t_mean = torch.mean(x)
+sq_diff = (t - t_mean)**2
+var = torch.mean(sq_diff)
+print(var)

@@ -52,3 +52,10 @@ target_transform = Lambda(lambda y: torch.zeros(
 def flatten(x: torch.Tensor) -> torch.Tensor:
     y = x.view(-1)
     return y
+
+def transpose_and_reverse(x: torch.Tensor) -> torch.Tensor:
+    # reverse from 1D to 2D with 2* rows
+    result = x.view(2, -1)
+    # reverse rows to columns
+    result = torch.transpose(input=x, dim0=0, dim1=1) # dim0 and dim1 are swapped during transpose
+    return result

@@ -23,3 +23,8 @@ Encoders identical in containing self-attention layer and FFNN layer. Point of s
     - This determines how much attention to pay in the sentence with respect to this word itself and the other words in the sentence. (the "self" in self-attention)
     - Calculated by dot product of query and key vectors (qk), and scaled by dk**0.5 (for numerical stability)
     - Every word has a **score** with respect to every other word in the sentence. (Hence *n-squared scores for a sentence of length n, and the quadratic problem*)
+    - Note the difference in size of the embedding vector (usually 512) and the q/k/v vectors (usually 64)
+    <img src="images/2025-10-10-15-13-12.png" alt="query-key-similarity" width="700">
+    - The result is a tensor of shape (batch, num_heads, seq_len_q, seq_len_k)
+    - Queries represent "what context the word in question needs" and Keys represent "what context the word in question provides"
+    - Hence we want a distribution of these "possible context words" summing to 1, and the softmax function, with dim=-1 enables this, normalizing all possible keys for each query (recall attention scores are calculated with respect to the word itself and the other words in the sentence)

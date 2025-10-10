@@ -1,5 +1,6 @@
 import torch
 from torchvision.transforms import ToTensor, Lambda
+import torch.nn.Functional as F
 
 d = [1, 2]
 t = torch.tensor(d)
@@ -62,3 +63,11 @@ def transpose_and_reverse(x: torch.Tensor) -> torch.Tensor:
 
 def slice_and_sum(x: torch.Tensor) -> torch.Tensor:
     return torch.sum(x[::2], dim=1)
+
+x = torch.tensor([[1.0, 2.0, 3.0], [1.0, 5.0, 3.0]])
+print(F.softmax(x, dim=1))
+# tensor([[0.0900, 0.2447, 0.6652],
+#         [0.0159, 0.8668, 0.1173]])
+print(F.softmax(x,dim=0))
+# tensor([[0.5000, 0.0474, 0.5000],
+#         [0.5000, 0.9526, 0.5000]])

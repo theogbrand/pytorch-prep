@@ -1,6 +1,6 @@
 import torch
 from torchvision.transforms import ToTensor, Lambda
-import torch.nn.Functional as F
+import torch.nn.functional as F
 
 d = [1, 2]
 t = torch.tensor(d)
@@ -81,9 +81,21 @@ torch.mean(x)
 torch.mean(x, 1)
 # tensor([2., 3.])
 
-# "Pure" tensor-based variance calculation
+# "Pure" tensor-based variance calculation instead of using .item() to perform elem-wise ops
 t = torch.tensor([1,2,3])
 t_mean = torch.mean(x)
 sq_diff = (t - t_mean)**2
 var = torch.mean(sq_diff)
 print(var)
+
+# the point of keepdim=True
+def softmax(logits: torch.Tensor) -> torch.Tensor:
+    # keepdim so shape is consistent with existingly operated tensors, easier for follow up ops
+    t_norm = logits - torch.max(logits, dim=1, keepdim=True).values # columns represent class proba, hence dim=1
+    t_exp = torch.exp(t_norm)
+    t_sum = torch.sum(t_exp, dim=1, keepdim=True) # sum across dim=1 reduces the dim, without keepdim, manual .view(-1,1) required for broadcasting later
+    z = t_exp / t_sum
+    return z
+
+logits = torch.tensor([[1.,2.,3.], [2.,4.,6.]])
+assert torch.allclose(softmax(logits), F.softmax(logits, dim=1))

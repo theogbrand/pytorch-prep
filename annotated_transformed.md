@@ -55,3 +55,21 @@ Encoders identical in containing self-attention layer and FFNN layer. Point of s
 
 5. *Positional Encoding*
     - Accounting for the order of words in the input sequence, not just semantics.
+    - Not learned by the model in Vaswani 2017, but deterministic functions (since and cosine) that are added to the token embeddings. "Just" precomputed values that "account" for relative positions of words in the sequence.
+    - Later, Learned Positional Encoding (BERT), Relative PE (T5, DeBERTa), Rotary Embeddings (RoPE)
+        - RoPE does not add positional vector to embeddings pre-attention, instead inject position information directly into the attention score computation (To Revisit)
+
+6. *Residual/Skip Connections*
+    - Each encoder has a residular connection around it and followed by Layer-Norm.
+    - the point is to allow gradients to "flow through" the addition operation back to earlier layers, and allow each layer to learn the delta (incremental change to apply) if it discovers something unique to modify
+
+7. *Decoder Blocks*
+- Final encoder block output transformed into a Key and Value used by each encoder-decoder attention (cross-attention) layer (shared) in the decoder blocks (Kencoder/decoder, Vencoder/decoder) instead of standalone KV weight matrices as in the encoder blocks. Each decoder block has its own Query weight matrix (Wq)
+- Key distinction of decoder blocks:
+    - Cross attention score in decoder blocks work by taking the encoder output (K, V) and dot product with the decoder block's Query (q) matrice (learned) to get the attention scores.
+    - in the output of each step is fed to the bottom decoder in the next step (auto-regressive). Every time step, we feed in the new sequence (with just predicted token) to the bottom decoder to "bubble up" the decoder blocks and get the next predicted token
+- Masking (during training) to only allow self-attention for past tokens (not future)
+
+8. *Final Linear and Softmax Layer* (Language Modelling Head?)
+- Learned matrice that projects the output of the decoder blocks (n,d_model) to (n,vocab_size) using a linear transformation (W_out), to produce the logits.
+- Softmax applied to logits to get probabilities for each token in the vocabulary.

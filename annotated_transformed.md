@@ -42,9 +42,11 @@ Encoders identical in containing self-attention layer and FFNN layer. Point of s
         - Instead of single head attention, which might focus too much on one word, we "expand" and "diversify" the model's ability to focus on different positions by having multiple heads. 
         - Each head learns its own attention mechanism, ending up with Nh sets of encoder/decoder attention weights.
         - *SPDA* is computed independently for each head, resulting in Nh different Z matrices (qkv output)
+        - output tensor shape [n_heads * (batch, seq_len_k, d_k)] where n_heads*d_k = d_model (recall d_k = d_model / n_heads in pre-attention input)
     
     4. *Concatenation and Projection using Wo*
-        -  Since FFN is expecting a single vector input, we need to CONCAT the Nh of Z matrices, and "project" them with Wo, size (n_heads * head_dim, d_model)
+        -  Since FFN is expecting a single vector input, we need to CONCAT the Nh of Z matrices, and "project" them with Wo, size (d_model, d_model)
             - Recall: The embedding algorith happens in the bottom-most encoder. The abstraction that is common to all the encoders is that they receive a list of vectors each of the size 512 – In the bottom encoder that would be the word embeddings, but in other encoders, it would be the output of the encoder that’s directly below. 
             The size of this list is hyperparameter we can set – basically it would be the length of the longest sentence in our training dataset.
 
+        <img src="images/2025-10-13-16-22-59.png" alt="multi-head attention concat" width="700">

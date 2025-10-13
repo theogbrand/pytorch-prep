@@ -73,3 +73,5 @@ Encoders identical in containing self-attention layer and FFNN layer. Point of s
 8. *Final Linear and Softmax Layer* (Language Modelling Head?)
 - Learned matrice that projects the output of the decoder blocks (n,d_model) to (n,vocab_size) using a linear transformation (W_out), to produce the logits.
 - Softmax applied to logits to get probabilities for each token in the vocabulary.
+- Recall: d_model is the "common abstraction" of all the encoder and decoder blocks, and is the "width" of the training data representation
+- Instead of training this layer, many models (GPT2/3) use weight tying, LM head weight matrix is the same matrix as the input token embedding matrix (W_emb)

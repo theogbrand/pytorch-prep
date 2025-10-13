@@ -2,7 +2,9 @@ A Transformer takes as input a word, passes it through a stack of encoder blocks
 <img src="images/2025-10-07-13-15-28.png" alt="stacked encoder-decoder blocks" width="600">
 
 # Token Embeddings
-Raw Text -> Tokenization -> Token IDs [101, 2023, 2088] (not embeddings)
+- Raw Text -> Tokenization -> Token IDs [101, 2023, 2088] (not embeddings)
+- We MUST use the same tokenizer used in trainining for decoding! If BPE vocab of 30K used in training, using BPE vocab of 50K might use differeent merge rules and token IDs!!!
+- TODO: Revisit BPE algo
 every word -> single embedding through embd algorithm, each word is embedded into a vector of size 512 (or the length of the longest sentence in training data) - the "width" of training data representation
 Word Embedding Algorithm used to convert words (text) from a Vocabulary to a corresponding vector of real numbers.
 - instead of Bag Of Words (one-hot encoding) with high dimensionality, sparse vectors, ideally our WEA should have two advantageous properties:
@@ -18,6 +20,7 @@ Word Embedding Algorithm used to convert words (text) from a Vocabulary to a cor
 # Bottom Most Encoder Block
 - Token Embedding Algorithm #1: (seq_len, d_model) where seq_len is the length of the longest sentence in training data, d_model is the embedding dimension (original 512 for Vaswani 2017) - the "width" of training data
 - Embedding v.s. Linear Transformations: embedding converts discrete tokens (words) into continuous vectors; linear transformations (W) can map these vectors to different spaces
+- Abstraction common to all encoders is they receive a list of vectors of the size d_model (512 for Vaswani 2017) 
 
 Encoders identical in containing self-attention layer and FFNN layer. Point of self-attention 
 

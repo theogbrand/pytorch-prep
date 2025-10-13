@@ -1,3 +1,4 @@
+# Fundamental
 1. Debugging Transformers 
     - Tokenization (Implementing BPE)
     - Forward Pass from scratch (Inference)
@@ -12,3 +13,7 @@
 4. Decoding Strategies
     - Binary Search, Backtracking, Dijkstra
     - Speculative Decoding
+
+# Advanced (if time permits)
+5. Basic GPU Profiling
+6. Mixture of Experts

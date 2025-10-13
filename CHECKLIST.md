@@ -13,8 +13,9 @@
 4. Decoding Strategies
     - Binary Search, Backtracking, Dijkstra
     - Speculative Decoding
-5. Vision Language Models (VLMs)
-6. Vision Language Action Models (VLAs)
+5. (LSTMs) -> RNNs -> Transformers
+6. Vision Language Models (VLMs)
+7. Vision Language Action Models (VLAs)
 
 # Advanced (if time permits)
 5. Basic GPU Profiling

@@ -46,7 +46,12 @@ Encoders identical in containing self-attention layer and FFNN layer. Point of s
     
     4. *Concatenation and Projection using Wo*
         -  Since FFN is expecting a single vector input, we need to CONCAT the Nh of Z matrices, and "project" them with Wo, size (d_model, d_model)
+            - The point of Wo is to learn "cross-head" mixing. After CONCAT, we do get (n,512) dim tensor (compatible with FFN input), but the 512 dims are *structurally seggregated*
+            - "after we see data from multiple n-head lenses, we want to synthesize insights from every lens" 
             - Recall: The embedding algorith happens in the bottom-most encoder. The abstraction that is common to all the encoders is that they receive a list of vectors each of the size 512 – In the bottom encoder that would be the word embeddings, but in other encoders, it would be the output of the encoder that’s directly below. 
             The size of this list is hyperparameter we can set – basically it would be the length of the longest sentence in our training dataset.
 
         <img src="images/2025-10-13-16-22-59.png" alt="multi-head attention concat" width="700">
+
+5. *Positional Encoding*
+    - Accounting for the order of words in the input sequence, not just semantics.

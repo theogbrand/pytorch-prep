@@ -26,4 +26,5 @@ References:
 - [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
 - [NanoGPT](https://github.com/karpathy/nanoGPT)
 - [LucidRains Transformers](https://github.com/lucidrains/x-transformers/blob/main/x_transformers/x_transformers.py)
-- 
+- [Stanford CS 336](https://www.youtube.com/watch?v=6OBtO9niT00&list=PLoROMvodv4rOY23Y0BoGoBGgQ1zmU_MT_&index=7)
+- [Umar Jamil ViT](https://www.youtube.com/watch?v=vAmKB7iPkWw&t=8310s)

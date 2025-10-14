@@ -1,12 +1,12 @@
 # Fundamental
 1. Debugging Transformers 
     - Forward Pass from scratch (Self/Cross-Attention, Positional/Token Embeddings, Batch/Layer Norm) **OK**
-    - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging **Today**
+    - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging **Now**
     - Tokenization (Implementing BPE) **Later**
     - Transformer Blocks Extensions (RMSNorm, AdamW/RMSProp (LR scheduler > SGD), Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN) **Later**
     - Debugging tensor shapes -> see NanoGPT/NanoChat/MicroGrad
 2. KV Cache
-    - Building Matrices **Next**
+    - Building Matrices **OK**
 3. Top-K/KNN 
     - Common implementation pattern of "picking the K largest items" (BoN)
     - Look at how heaps data structures can help

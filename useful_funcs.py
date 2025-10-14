@@ -99,3 +99,5 @@ def softmax(logits: torch.Tensor) -> torch.Tensor:
 
 logits = torch.tensor([[1.,2.,3.], [2.,4.,6.]])
 assert torch.allclose(softmax(logits), F.softmax(logits, dim=1))
+
+torch.arrange()

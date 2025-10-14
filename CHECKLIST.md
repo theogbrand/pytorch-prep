@@ -1,23 +1,29 @@
 # Fundamental
 1. Debugging Transformers 
-    - Tokenization (Implementing BPE)
-    - Forward Pass from scratch (Inference)
-    - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging
-    - Transformer Blocks (Self-Attention, Positional/Token Embeddings, Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN)
-    - Debugging tensor shapes -> see NanoGPT
-2. Top-K/KNN 
+    - Forward Pass from scratch (Self/Cross-Attention, Positional/Token Embeddings, Batch/Layer Norm) **OK**
+    - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging **Now**
+    - Tokenization (Implementing BPE) **Next**
+    - Transformer Blocks Extensions (RMSNorm, AdamW/RMSProp (LR scheduler > SGD), Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN) **Later**
+    - Debugging tensor shapes -> see NanoGPT/NanoChat/MicroGrad
+2. KV Cache
+    - Building Matrices **Next**
+3. Top-K/KNN 
     - Common implementation pattern of "picking the K largest items" (BoN)
     - Look at how heaps data structures can help
-3. KV Cache
-    - Building Matrices
 4. Decoding Strategies
     - Binary Search, Backtracking, Dijkstra
     - Speculative Decoding
 5. Llama Architecture
 6. (LSTMs) -> RNNs -> Transformers
-7. Vision Language Models (VLMs)
+7. Vision Language Models (VLMs)/[Image Transformer](https://arxiv.org/abs/1802.05751)/Vision Transformer (ViT)
 8. Vision Language Action Models (VLAs)
 
 # Advanced (if time permits)
 5. Basic GPU Profiling
 6. Mixture of Experts
+
+References:
+- [Illustrated Transformer](https://jalammar.github.io/illustrated-transformer/)
+- [NanoGPT](https://github.com/karpathy/nanoGPT)
+- [LucidRains Transformers](https://github.com/lucidrains/x-transformers/blob/main/x_transformers/x_transformers.py)
+- 

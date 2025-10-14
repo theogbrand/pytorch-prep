@@ -1,0 +1,1 @@
+Computational Graphs: Nodes are operations, edges are tensors. Used for automatic differentiation (AD). Recall the Kaparthy diagram for simple differentiation. Show how gradients "flow through" from the output to the input (Left to Right), depending on the operation (+, *, etc.). and chain rule.

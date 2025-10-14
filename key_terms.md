@@ -1,1 +1,4 @@
-Computational Graphs: Nodes are operations, edges are tensors. Used for automatic differentiation (AD). Recall the Kaparthy diagram for simple differentiation. Show how gradients "flow through" from the output to the input (Left to Right), depending on the operation (+, *, etc.). and chain rule.
+- *Computational Graphs*: Nodes are operations, edges are tensors. Used for automatic differentiation (AD). Recall the Kaparthy diagram for simple differentiation. Show how gradients "flow through" from the output to the input (Left to Right), depending on the operation (+, *, etc.). and chain rule.
+- *Dot Product*: The sum of the element-wise product of two vectors.
+- *Matrix Multiplication*: Apply dot product to each row of the first matrix with each column of the second matrix.
+- *Feed Forward Network*: The "non-linearity" part of the transformer block, where the "information processing" happens. Usually a standard 2-layer MLP. Attention routes information, FFN processes it.

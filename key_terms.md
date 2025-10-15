@@ -7,3 +7,6 @@
 - *N_Attention_Heads*
 - *Token Embeddings (wte)*
 - *Positional Embeddings (wpe)*
+- *Queries (Q)*: What current word is looking for
+- *Keys (K)*: Relevance of other words in the context ("how much to attend to this word")
+- *Values (V)*: Actual information of the words in the context

@@ -1,5 +1,5 @@
 import torch
-# Batch Norm: Norm by feature/channel/last-dim
+# Batch Norm:
 def batch_norm(data: torch.Tensor, epsilon) -> torch.Tensor:
     t_mean = torch.mean(data, dim=0, keepdim=True)
     t_var = torch.var(data,dim=0, keepdim=True) # or use unbiased=False to use N instead of N-1 as the denominator
@@ -46,7 +46,7 @@ Used in LLaMA, Mistral, and other recent LLMs. It's a simplified Layer Norm:
 
 **Practical note:** Almost every Transformer you'll encounter uses Layer Norm or RMSNorm. Batch norm is essentially absent from the Transformer world because it fundamentally conflicts with variable-length sequences and single-sample generation.
 
-# Toy Example of Batch Norm for "normalizing" different scales for smoother learning (MLP) -> concept applies for Transformers when we add to residuals
+# Toy Example (MLP) -> concept applies for Transformers when we add to residuals
 This way, we ensure that parameter updates are proportional:
 - Each dimension changes by similar percentages
 - No dimension explodes or vanishes

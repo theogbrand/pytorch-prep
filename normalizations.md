@@ -47,44 +47,12 @@ Used in LLaMA, Mistral, and other recent LLMs. It's a simplified Layer Norm:
 **Practical note:** Almost every Transformer you'll encounter uses Layer Norm or RMSNorm. Batch norm is essentially absent from the Transformer world because it fundamentally conflicts with variable-length sequences and single-sample generation.
 
 # Toy Example of Batch Norm for "normalizing" different scales for smoother learning (MLP) -> concept applies for Transformers when we add to residuals
+This way, we ensure that parameter updates are proportional:
+- Each dimension changes by similar percentages
+- No dimension explodes or vanishes
+- Training is STABLE
 
-Layer 1 output: [100, 0.01, 50]  ← Wildly different scales!
-              ↓
-         [Weights W]
-              ↓
-Layer 2 input: [very large values]
-```
-
-**What happens during backpropagation?**
-
-Let's trace gradients with simple numbers:
-
-**Forward pass:**
-```
-x = [100, 0.01, 50]
-W = [[0.1, 0.2],
-     [0.3, 0.4],
-     [0.5, 0.6]]
-     
-y = x @ W = [35.003, 50.006]
-```
-
-**Backward pass (computing ∂Loss/∂x):**
-```
-If ∂Loss/∂y = [1, 1]
-
-Then: ∂Loss/∂x₁ = 1×0.1 + 1×0.2 = 0.3
-      ∂Loss/∂x₂ = 1×0.3 + 1×0.4 = 0.7
-      ∂Loss/∂x₃ = 1×0.5 + 1×0.6 = 1.1
-```
-
-**But here's the problem**: When you update x:
-```
-x₁ = 100 - lr×0.3    (small relative change: 0.3%)
-x₂ = 0.01 - lr×0.7   (HUGE relative change: 7000%!)
-x₃ = 50 - lr×1.1     (medium relative change: 2.2%)
-```
-
+### Without LN:
 With learning rate = 0.1:
 - x₁: 100 → 99.97 (barely moves)
 - x₂: 0.01 → -0.06 (explodes by 600%!)
@@ -102,48 +70,14 @@ x_norm = [0.71, -1.41, 0.71]  ← Similar scales!
         ↓
    [× γ + β]
         ↓
-x_out = [1.42, -2.82, 1.42]  (with γ=2, β=0)
+x_out = [1.42, -2.82, 1.42]  (with γ=2, β=0) -> parameters of the LayerNorm
 ```
 
 Now all values are on similar scales, so gradients are balanced:
-```
-Updates are proportional:
-- Each dimension changes by similar percentages
-- No dimension explodes or vanishes
-- Training is STABLE
-```
-
-## Visual Diagram
-```
-WITHOUT LAYERNORM:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Input scales:  [████████████ 100]
-               [▏ 0.01]
-               [██████ 50]
-                    ↓
-Gradient flow:  Chaotic, unstable
-                    ↓
-Result:        Some neurons die, others explode
-
-
-WITH LAYERNORM:
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Input scales:  [████████████ 100]
-               [▏ 0.01]              } → LayerNorm
-               [██████ 50]
-                    ↓
-Normalized:    [███ 0.71]
-               [███ -1.41]
-               [███ 0.71]
-                    ↓
-Gradient flow:  Smooth, balanced
-                    ↓
-Result:        All neurons train effectively
-```
 
 ## Why This Matters Specifically in Transformers
 
-Transformers have **residual connections** everywhere:
+Transformers have **residual connections**, where we add the output of a layer to the input everywhere:
 ```
       x ────────────────┐
       │                 │
@@ -158,7 +92,7 @@ Transformers have **residual connections** everywhere:
 ```
 Layer 1:  x = [1, 2, 3]
 Layer 2:  x = [1, 2, 3] + attention_output
-Layer 3:  x = [previous] + attention_output
+Layer 3:  x = [Layer 2 output] + attention_output
 ...
 Layer 12: x = [10000, -5000, 8000]  ← EXPLODED!
 ```
@@ -169,7 +103,7 @@ Layer 1:  x = [1, 2, 3]
           → Attention → LayerNorm → [normalized values]
 Layer 2:  Add residual → LayerNorm → [normalized values]
 ...
-Layer 12: Still [reasonable scale]  ← STABLE!
+Layer 12: Still [increases but at reasonable scale, especially important for deep networks]  ← STABLE!
 ```
 
 ## Concrete Training Benefit

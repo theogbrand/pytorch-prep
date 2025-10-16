@@ -167,3 +167,13 @@ z = LN(y + MLP(y))
 2.	Pre-LN (GPT-style, most modern LLMs)
 y = x + Attn(LN(x))
 z = y + MLP(LN(y))
+
+RESIDUAL CONNECTION:                                       │
+│  • Provides gradient highway (backward pass)                │
+│  • Preserves information (forward pass)                     │
+│  • Problem: Can cause scale explosion                       │
+│                                                             │
+│  LAYERNORM:                                                 │
+│  • Controls scale explosion (forward pass)                  │
+│  • Stabilizes training (both directions)                    │
+│  • Problem: Alone would hurt gradient flow 

@@ -10,4 +10,5 @@
 - *Queries (Q)*: What current word is looking for
 - *Keys (K)*: Relevance of other words in the context ("how much to attend to this word")
 - *Values (V)*: Actual information of the words in the context
-- *LayerNorm and Residual Connections*: ONLY placed after Attention Block and FFN Block (where we add the residuals to the input), and only between them, not within them.
+- *LayerNorm and Residual Connections*: ONLY placed after Attention Block and FFN Block (after we add the residuals (output of ATN/FFN) to the input, we want to "standardize" the scale of this output for training stability), and only between them, not within them.
+    - Recall; there are LayerNorm weights for every parameter in the prior layer, these weights allow for "dynamic" scaling in the case where parameters have vastly different scales e.g. [1, 100, 20] (Think of "normalizing" the prior Layer's output)

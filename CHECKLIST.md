@@ -3,7 +3,7 @@
     - Forward Pass from scratch (Self/Cross-Attention, Positional/Token Embeddings, Batch/Layer Norm) **OK**
     - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging **Now**
     - Tokenization (Implementing BPE) **Later**
-    - Transformer Blocks Extensions (RMSNorm, AdamW/RMSProp (LR scheduler > SGD), Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN) **Later**
+    - Transformer Blocks Optimizations (RMSNorm, AdamW/RMSProp (LR scheduler > SGD), Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN) **Later**
     - Debugging tensor shapes -> see NanoGPT/NanoChat/MicroGrad
 2. KV Cache
     - Building Matrices **OK**

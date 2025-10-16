@@ -6,3 +6,6 @@
 - "What's the effective depth of a 12-layer Transformer with residuals?" (Hint: Multiple paths!)
 - "Show mathematically why gradients 'skip' through residual connections"
 - "Can you have a 'learned skip' where the network decides when to skip?" (Yes! MoE, etc.)
+
+# Backprop
+- Do you know how all operations (+-*/), sum/mean/max/exp work in backprop?

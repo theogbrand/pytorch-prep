@@ -47,6 +47,7 @@ Used in LLaMA, Mistral, and other recent LLMs. It's a simplified Layer Norm:
 **Practical note:** Almost every Transformer you'll encounter uses Layer Norm or RMSNorm. Batch norm is essentially absent from the Transformer world because it fundamentally conflicts with variable-length sequences and single-sample generation.
 
 # Toy Example (MLP) -> concept applies for Transformers when we add to residuals
+Core Concept: LN Rescales values to std=1 and mean=0 via classic "Standardization" we know and love from statistics.
 This way, we ensure that parameter updates are proportional:
 - Each dimension changes by similar percentages
 - No dimension explodes or vanishes
@@ -126,3 +127,43 @@ Layer 6 gradient:  0.1
 Layer 1 gradient:  0.1  ← All similar!
 
 Can use learning rate 10x higher → fast training
+
+# Drawbacks of LayerNorm:
+## Drawback 1: Information Loss, hard to learn certain patterns
+for 2 very different inputs, after LN they look the same
+Input A: [100, 101, 102]  ← High values, small variance
+Input B: [1, 50, 99]      ← Medium values, large variance
+
+**After LayerNorm:**
+```
+Input A normalized:
+  mean = 101, std = 0.82
+  result: [-1.22, 0, 1.22]
+
+Input B normalized:
+  mean = 50, std = 40.1
+  result: [-1.22, 0, 1.22]
+```
+
+**They become IDENTICAL!** 🚨
+
+The network completely loses:
+- The **scale** information (A was 100× larger than B)
+- The **spread** information (B was 50× more variable)
+- The **absolute position** (A was centered at 101, B at 50)
+
+## Drawback 2: Breaks with Variable Sequence Lengths
+(more relevant for RNNs)
+
+## Drawback 3: Computational Overhead (Computing and storing in memory)
+With LN:     Store x, mean, variance, normalized_x (for backprop)
+
+
+Important variants of LN:
+1.	Post-LN (original Transformer, 2017)
+y = LN(x + Attn(x))
+z = LN(y + MLP(y))
+
+2.	Pre-LN (GPT-style, most modern LLMs)
+y = x + Attn(LN(x))
+z = y + MLP(LN(y))

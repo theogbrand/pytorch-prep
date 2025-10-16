@@ -11,7 +11,7 @@
 4. Top-K/KNN 
     - Common implementation pattern of "picking the K largest items" (BoN)
     - Look at how heaps data structures can help
-5. Decoding Strategies
+5. Decoding Strategies / Fast Inference
     - Binary Search, Backtracking, Dijkstra
     - Speculative Decoding
 6. Llama Architecture

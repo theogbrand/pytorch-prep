@@ -7,22 +7,22 @@
     - Debugging tensor shapes -> see NanoGPT/NanoChat/MicroGrad
 2. KV Cache
     - Building Matrices **OK**
-3. Basic distributed training implementations
+3. Basic distributed training implementations **Later, see NanoGPT/Chat**
 4. Top-K/KNN 
     - Common implementation pattern of "picking the K largest items" (BoN)
     - Look at how heaps data structures can help
 5. Decoding Strategies / Fast Inference
     - Binary Search, Backtracking, Dijkstra
-    - Speculative Decoding
+    - Speculative Decoding *See This*
 6. Llama Architecture
 7. (LSTMs) -> RNNs -> Transformers
-8. Vision Language Models (VLMs)/[Image Transformer](https://arxiv.org/abs/1802.05751)/Vision Transformer (ViT)
+8. Vision Language Models (VLMs)/[Image Transformer](https://arxiv.org/abs/1802.05751)/Vision Transformer (ViT) *NanoChat + SIGLIP*
 9. Vision Language Action Models (VLAs)
 
 # Advanced (if time permits)
-10. Basic GPU Profiling
-11. Mixture of Experts
-12. Muon Optimizer, LoRa, RL
+10. Basic GPU Profiling *how to go fast*
+11. Mixture of Experts *know conceptually*
+12. Muon Optimizer (NanoChat), LoRa, RL (NanoChat) *Go Through these*
 
 # Project and Knowledge Test
     - VL-PRM

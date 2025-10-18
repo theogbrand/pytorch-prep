@@ -1,0 +1,11 @@
+- UTF-8 is the most "efficient" amongst all, but downside is 256 characters only. 
+    - *Unicode* (vocab of 1M diff characters from letters, emojis, symbols from all languages) - ord(x) converts to unicode; then x.encode('utf-8') converts to bytes
+    - Byte usage: Depending on the character's Unicode code point, UTF-8 uses 1 to 4 bytes:
+        - Characters 0-127 (basic ASCII like letters, digits, punctuation) use 1 byte
+        - Characters 128-2,047 use 2 bytes
+        - Characters 2,048-65,535 use 3 bytes
+        - Characters 65,536 and beyond use 4 bytes
+- UTF-8 as Encoding Scheme for LLMs
+    - When used naively, all our text will be "stretched out" into long sequences of bytes, hard for model to attend to enough context to capture semantics
+    - Thinking: encoding of text -> some representation, long enough to capture semantics, 
+- Point is we have finite context length to attend to in Transformer, how do we pick the right tokens 

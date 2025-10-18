@@ -15,3 +15,6 @@
     - minibatches are a small sample of entire population, so using unbiased estimate (1/(m-1)) is more accurate in training set
     - Kaparthy just says use Bessel's Corretion, unbiased=True for both training/inference for consistency
 - How are gradients passed specifically for the operations tensor.mean(), tensor.max(), tensor.sum() where the operation involves "squashing" of the terms in the tensor
+
+# Tokenization
+- Write BPE algorithm from scratch in Python*

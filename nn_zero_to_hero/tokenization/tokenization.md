@@ -1,4 +1,4 @@
-- UTF-8 Encoding is the most "efficient" amongst all, but downside is 256 characters only. 
+- UTF-8 Encoding is the most "efficient"/least wasteful amongst all, and backwards compatibilities with ASCII
     - *Unicode* (vocab of 1M diff characters from letters, emojis, symbols from all languages) - ord(x) converts to unicode; then x.encode('utf-8') converts to bytes
         - Downsides of Unicode is only defines 150K vocab, constantly changing standard
     - BUT **Unicode** has encodings which are stable enough to be used, taking Unicode code points and converting to bytes strings (1 to 4 bytes) - variable length encoding
@@ -8,10 +8,10 @@
         - Characters 2,048-65,535 use 3 bytes -> "안" unicode code point is 50504
         - Characters 65,536 and beyond use 4 bytes
     - Code point is what the character is. Bytes are how it's physically stored.
-        - range 0 to 1,114,111; always 1 per character, use ord(x) to get the code point.
+        - range 0 to 1,114,111; *always 1 per character*, use ord(x) to get the code point.
     - Byte Values are always 0 to 255 (8 positions to store the value); each byte is 8 bits, so 2^8 = 256 possible values.
-        - use x.encode('utf-8') to get the bytes; could be 1, 2, 3, or 4 bytes per character for utf-8 encoding specifically
-- x.encode('utf-8') converts to list of bytes, e.g. "안".encode('utf-8') -> [236, 149, 136]
+        - use x.encode('utf-8') to get the bytes; could be **1, 2, 3, or 4 bytes per character** 
+- list(x.encode('utf-8')) converts to list of bytes, e.g. list("안".encode('utf-8')) -> [236, 149, 136]
     - match the encodings to the UTF-8 specification (deterministic):
         **UTF-8 byte structure:**
         The key is the leading bits of each byte tell you what's happening:
@@ -67,7 +67,26 @@
             encode:  [240, 159, 152, 128]
             binary:  11110000 10111111 10011000 10000000  (4-byte pattern) 
             ```
-- UTF-8 as Encoding Scheme for LLMs
-    - When used naively, all our text will be "stretched out" into long sequences of bytes, hard for model to attend to enough context to capture semantics
+- UTF-8 Encoding Scheme for LLM
+    - Naive raw byte-level UTF encoding (only 256 possible token vocab), results in sequences too long
+    - Want something that support tunable vocab size, but with UTF-8 encoding of strings (cos of relative stability)
     - Thinking: encoding of text -> some representation, long enough to capture semantics, 
 - Point is we have finite context length to attend to in Transformer, how do we pick the right tokens 
+
+# Byte Pair Encoding (BPE) Algorithm
+1. Get Byte-Level encoding using UTF-8 encoding -> returns list of bytes, each 0-255. 
+2. Analyze the frequency of pairs of bytes in the data, find the pair that appears most frequently, and mint a new token to "replace" this pair of bytes.
+3. Repeat the process until the desired vocab size is reached.
+    - the newly minted tokens can also be replaced if they still contain the most frequent pair
+
+Example:
+Seq=11 to 9 tokens: aaabdaaabac -> XabdXabac
+Vocab=4 to 5: abcdx
+
+Seq=9 to 7 tokens: aaabdaaabac -> XYdXYac
+Vocab=5 to 6: ABCDXY
+
+Seq=7 to 5 tokens: XYdXYac -> ZdZac
+Vocab=6 to 7: ABCDXYZ
+
+Overall: Sequence compressed from 11 to 5 tokens, vocab size increased from 4 to 7.

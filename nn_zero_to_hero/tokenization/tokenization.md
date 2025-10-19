@@ -73,7 +73,7 @@
     - Thinking: encoding of text -> some representation, long enough to capture semantics, 
 - Point is we have finite context length to attend to in Transformer, how do we pick the right tokens 
 
-# Byte Pair Encoding (BPE) Algorithm
+# Byte Pair Encoding (BPE) Algorithm ("subword" tokenization because characters get merged into a new token which becomes like a subword more commonly)
 1. Get Byte-Level encoding using UTF-8 encoding -> returns list of bytes, each 0-255. 
 2. Analyze the frequency of pairs of bytes in the data, find the pair that appears most frequently, and mint a new token to "replace" this pair of bytes.
 3. Repeat the process until the desired vocab size is reached.
@@ -109,3 +109,15 @@ SolidGoldMagikarp is a consequence of the phenomenon. In Tokenization training s
 - Enforce how some characters should never be merged together for sure, using **REGEX pattern** to match and "chunk" text first into a list of strings, then tokenize each chunk individually before merging them together.
     - Issues with regex pattern like not case sensitive
 - The REGEX pattern first splits your text into individual words in a list following the regex rules, THEN tokenizes individually independently before merging them together.
+
+## Multimodal
+1. “Soft tokens” vs “hard tokens”
+
+In text, we have discrete tokens (e.g. “hello” → [1541, 345, 56, 2])
+→ each is an integer index into a vocab table (hard, categorical).
+
+In other modalities (images, audio, video), you can’t easily discretize the data without major compression loss — pixels and waveforms are continuous, high-dimensional signals.
+
+Instead of discrete IDs, you represent inputs as continuous embeddings (real-valued vectors).
+    - They live in a “latent token space,” e.g. a sequence of 512-dim vectors produced by an encoder (VAE, ViT, etc.).
+    - These vectors can then be fed into a Transformer exactly like text tokens — same architecture, same attention mechanics using a linear projection layer to project the embeddings to the vocabulary size.

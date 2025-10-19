@@ -1,28 +1,29 @@
 # Fundamental
 1. Debugging Transformers 
     - Forward Pass from scratch (Self/Cross-Attention, Positional/Token Embeddings, Batch/Layer Norm) **OK**
-    - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging **Now**
-    - Tokenization (Implementing BPE) **Later**
-    - Transformer Blocks Optimizations (RMSNorm, AdamW/RMSProp (LR scheduler > SGD), Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN) **Later**
+    - Backpropagation from scratch (Training), Chain Rules, Auto-Diff, Indexing Errors debugging **OK**
+    - Tokenization (Implementing BPE) **OK**
+    - Transformer Blocks Optimizations (RMSNorm, AdamW/RMSProp (LR scheduler > SGD), Attention Optimizations like FlashAttention, Sliding Window Attention, Long Context Length like RoPe/YaRN) **Now**
     - Debugging tensor shapes -> see NanoGPT/NanoChat/MicroGrad
 2. KV Cache
     - Building Matrices **OK**
 3. Basic distributed training implementations **Later, see NanoGPT/Chat**
-4. Top-K/KNN 
+4. Basic Multimodal Transformers (VLM)
+5. Top-K/KNN 
     - Common implementation pattern of "picking the K largest items" (BoN)
     - Look at how heaps data structures can help
-5. Decoding Strategies / Fast Inference
+6. Decoding Strategies / Fast Inference
     - Binary Search, Backtracking, Dijkstra
     - Speculative Decoding *See This*
-6. Llama Architecture
-7. (LSTMs) -> RNNs -> Transformers
-8. Vision Language Models (VLMs)/[Image Transformer](https://arxiv.org/abs/1802.05751)/Vision Transformer (ViT) *NanoChat + SIGLIP*
-9. Vision Language Action Models (VLAs)
+7. Llama Architecture
+8. (LSTMs) -> RNNs -> Transformers
+9. Vision Language Models (VLMs)/[Image Transformer](https://arxiv.org/abs/1802.05751)/Vision Transformer (ViT) *NanoChat + SIGLIP*
+10. Vision Language Action Models (VLAs)
 
 # Advanced (if time permits)
-10. Basic GPU Profiling *how to go fast*
-11. Mixture of Experts *know conceptually*
-12. Muon Optimizer (NanoChat), LoRa, RL (NanoChat) *Go Through these*
+11. Basic GPU Profiling *how to go fast*
+12. Mixture of Experts *know conceptually*
+13. Muon Optimizer (NanoChat), LoRa, RL (NanoChat) *Go Through these*
 
 # Project and Knowledge Test
     - VL-PRM

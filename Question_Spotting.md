@@ -1,5 +1,7 @@
 # Tokenization
 - Write BPE algorithm from scratch in Python
+- Encode and Decode Functions, given init Vocab and merges
+- Some BPE v.s. SentencePiece 
 
 # BackProp:
 - Backprop by hand Cross-Entropy Loss for a simple 2-layer MLP with 1 hidden layer

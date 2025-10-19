@@ -102,3 +102,10 @@ In General, Tokenizer which tokenizes text into much smaller sequence length is 
 ### BUT we can use a completely different subset of the training data to train the tokenizer, for example when we want more multilingual token support, we use a subset of training data (or could be completely different dataset) with more multilingual tokens, resulting in more multilingual merges.
 
 SolidGoldMagikarp is a consequence of the phenomenon. In Tokenization training set, used lots of reddit data containing this token to train GPT2 tokenizer, resulting in a single "SolidGoldMagikarp" token. BUT during training, the training data did not contain this token, so the embedding for this token is never trained, resulting in a "random" embedding for this token. During inference, the model uses the random embedding to create output sequences, resulting in Gibberish. (like "unallocated memory" for SolidGoldMagikarp token)
+
+# Naive BPE Optimizations
+
+## Dealing with common words with spurious variations (e.g. punctionation, capitalization, etc. dog. dog? dog!)
+- Enforce how some characters should never be merged together for sure, using **REGEX pattern** to match and "chunk" text first into a list of strings, then tokenize each chunk individually before merging them together.
+    - Issues with regex pattern like not case sensitive
+- The REGEX pattern first splits your text into individual words in a list following the regex rules, THEN tokenizes individually independently before merging them together.

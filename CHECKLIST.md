@@ -7,7 +7,14 @@
     - Debugging tensor shapes -> see NanoGPT/NanoChat/MicroGrad
 2. KV Cache
     - Building Matrices **OK**
-3. Basic distributed training implementations **Later, see NanoGPT/Chat**
+3. Basic distributed training implementations **Now, see NanoGPT/Chat**
+
+Go through implementations of Quantization, LoRa, RMSNorm/LayerNorm, Sliding Window Attention, Long Context Length like RoPe/YaRN/ALiBi, FlashAttention, etc. 
+
+Top-K/KNN, Speculative Decoding, etc. Ensure FP16/FP32 tensor array? Mixed Precision Training? Distributed Training?
+
+Implement custom layer for... debug a transformer block... implement custom autograd for...
+
 4. Basic Multimodal Transformers (VLM)
 5. Top-K/KNN 
     - Common implementation pattern of "picking the K largest items" (BoN)

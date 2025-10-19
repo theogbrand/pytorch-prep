@@ -90,3 +90,15 @@ Seq=7 to 5 tokens: XYdXYac -> ZdZac
 Vocab=6 to 7: ABCDXYZ
 
 Overall: Sequence compressed from 11 to 5 tokens, vocab size increased from 4 to 7.
+
+In General, Tokenizer which tokenizes text into much smaller sequence length is advantageous for the model as it can attend to more context tokens to learn better semantic representations
+    - Examples (negative ones): 
+        - space tokens existing as standalone tokens without multiple space tokens having their own tokens (for code gen especially)
+        - Korean characters of common phrases like (Hello -> AnnYeongHaSeYo) not existing as a single token
+        - JSON contains more characters than YAML for the same data representation
+
+### Training Tokenizer is completely independent from training the model but also coupled in a sense that the same tokenizer should be used for training data and for using during inference
+
+### BUT we can use a completely different subset of the training data to train the tokenizer, for example when we want more multilingual token support, we use a subset of training data (or could be completely different dataset) with more multilingual tokens, resulting in more multilingual merges.
+
+SolidGoldMagikarp is a consequence of the phenomenon. In Tokenization training set, used lots of reddit data containing this token to train GPT2 tokenizer, resulting in a single "SolidGoldMagikarp" token. BUT during training, the training data did not contain this token, so the embedding for this token is never trained, resulting in a "random" embedding for this token. During inference, the model uses the random embedding to create output sequences, resulting in Gibberish. (like "unallocated memory" for SolidGoldMagikarp token)

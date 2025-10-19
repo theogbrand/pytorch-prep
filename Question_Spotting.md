@@ -11,4 +11,5 @@
 - Botched implementation of above, fix it.
 
 # Challenging (Medium to hard difficulty):
-- Implement LoRA in a Linear Layer (TensorGym)
+- Implement LoRA in a Linear Layer (TensorGym) - Hard
+- Int8 Quantized MatMul in PyTorch (LeetGPU) - Hard

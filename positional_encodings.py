@@ -9,6 +9,25 @@ import torch.nn as nn
 import math
 
 
+def pos_encoding(position: int, d_model: int):
+    
+    if position == 0 or d_model <= 0:
+        return -1
+
+    # Create position and dimension indices
+    pos = torch.arange(position, dtype=torch.float32).reshape(position, 1)
+    ind = torch.arange(d_model, dtype=torch.float32).reshape(1, d_model)
+
+    # Compute the angles
+    angle_rads = pos / torch.pow(10000, (2 * (ind // 2)) / d_model)
+
+    # Apply sine to even indices, cosine to odd indices
+    angle_rads[:, 0::2] = torch.sin(angle_rads[:, 0::2])  # Even indices
+    angle_rads[:, 1::2] = torch.cos(angle_rads[:, 1::2])  # Odd indices
+
+    # Convert to float16
+    return angle_rads.to(torch.float16)
+
 # ==============================================================================
 # 1. SINUSOIDAL POSITIONAL ENCODING (Original Transformer - Vaswani et al.)
 # ==============================================================================

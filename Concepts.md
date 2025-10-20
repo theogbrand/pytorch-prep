@@ -1,0 +1,5 @@
+- Local derivative of y = torch.mean(x) -> 1/N * dy/dx
+    - 1/N because torch.mean() returns a single scalar value, but we need to pass the gradient to each element of x
+- logits = f_t @ w_t + b_t
+    - dw_t = f_t.T @ dlogits
+    - db_t = dlogits.sum(dim=0)

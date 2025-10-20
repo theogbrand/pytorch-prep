@@ -1,1 +1,4 @@
 -  z_t = torch.as_tensor(z, dtype=float) -> "do I already have the right format?". result = torch.sigmoid(z_t, dtype=float) return round(result, 4)
+- torch.mul (elem-wise multiplication) v.s. torch.dot (dot product - elem-wise multiplication AND sum)
+- torch.round(h, decimals=4).tolist(), mse.item() v.s. round(array_vals, 4)
+- d/dx sigmoid(x) = sigmoid(x) * (1 - sigmoid(x))

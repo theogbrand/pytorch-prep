@@ -3,3 +3,4 @@
 - logits = f_t @ w_t + b_t
     - dw_t = f_t.T @ dlogits
     - db_t = dlogits.sum(dim=0)
+- when dw_t and db_t is calculated, we use w_t -= learning_rate * dw_t and b_t -= learning_rate * db_t; and NOT "+=" because gradient points towards increasing the loss, but we want to decrease the loss

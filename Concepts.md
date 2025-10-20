@@ -7,6 +7,8 @@
     - dw_t = f_t.T @ dlogits
     - db_t = dlogits.sum(dim=0)
 - when dw_t and db_t is calculated, we use w_t -= learning_rate * dw_t and b_t -= learning_rate * db_t; and NOT "+=" because gradient points towards increasing the loss, but we want to decrease the loss
+    - for p in n.parameters(): p.data += -0.1 * p.grad
+    - Gradient vector gives us direction to increase the loss. We want to decrease loss, so must add the negative sign when updating parameters with gradients
 - BP Gradients:
     - dLoss/dLoss = 1 (base case) -> **We ALWAYS have out.grad**
     - For "addition" operation, local derivative is always 1. 
@@ -20,3 +22,4 @@
     - For "sine" operation, local derivative is the cosine of the operand
     - For "cosine" operation, local derivative is the negative sine of the operand
     - For "tangent" operation, local derivative is the secant squared of the operand
+- Single line MSE:  loss = sum((yout - ygt)**2 for ygt, yout in zip(ys, ypred))

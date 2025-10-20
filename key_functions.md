@@ -1,0 +1,1 @@
+-  z_t = torch.as_tensor(z, dtype=float) -> "do I already have the right format?". result = torch.sigmoid(z_t, dtype=float) return round(result, 4)

@@ -121,3 +121,13 @@ In other modalities (images, audio, video), you can’t easily discretize the da
 Instead of discrete IDs, you represent inputs as continuous embeddings (real-valued vectors).
     - They live in a “latent token space,” e.g. a sequence of 512-dim vectors produced by an encoder (VAE, ViT, etc.).
     - These vectors can then be fed into a Transformer exactly like text tokens — same architecture, same attention mechanics using a linear projection layer to project the embeddings to the vocabulary size.
+
+## SentencePiece Tokenization
+- BPE is applied on Raw code points (Unicode code points) directly, instead of UTF-8 bytes.
+- Set BOS, EOS, UNK tokens and optional PAD token
+- Set pre-determined Vocab Size, if Byte Fallback is turned on, add all 255 possible bytes to the vocab first
+- otherwise, add all merges, then pad remaining vocab with individual code points found in training set starting with chars with the most count first (considers individual code points as indepedent regardless if they have already been merged)
+
+### SentencePiece Outputs
+Model: the merges, statistics and probas
+Vocab: the tokens in the vocab after special tokens and merges and frequeuncy-based char selection

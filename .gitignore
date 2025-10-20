@@ -4,3 +4,4 @@ nn_zero_to_hero/tokenization/tok400.model
 .gitignore
 nn_zero_to_hero/tokenization/toy.txt
 nn_zero_to_hero/tokenization/tok400.vocab
+nn_zero_to_hero/gpt2_pytorch/input.txt

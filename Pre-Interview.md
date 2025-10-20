@@ -1,7 +1,8 @@
 PyTorch Round 1:
 
 1. Attention Block
-    -  Masked, Sliding Window, ALiBi
+    - Masked, Sliding Window, ALiBi
+    - KV Cache Mechanics
 2. SoftMax
 3. LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
 4. Backward Pass Rules (Addition, Multiplication, Subtraction)

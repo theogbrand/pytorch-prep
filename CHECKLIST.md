@@ -13,7 +13,7 @@ Go through implementations of Quantization, LoRa, RMSNorm/LayerNorm, Sliding Win
 
 Top-K/KNN, Speculative Decoding, etc. Ensure FP16/FP32 tensor array? Mixed Precision Training? Distributed Training?
 
-Implement custom layer for... debug a transformer block... implement custom autograd for...
+Implement custom layer for... debug a transformer block... implement custom autograd for (forward+backward functions)...
 
 4. Basic Multimodal Transformers (VLM)
 5. Top-K/KNN 

@@ -23,3 +23,11 @@
     - For "cosine" operation, local derivative is the negative sine of the operand
     - For "tangent" operation, local derivative is the secant squared of the operand
 - Single line MSE:  loss = sum((yout - ygt)**2 for ygt, yout in zip(ys, ypred))
+- Attention "Math" trick: 
+    - torch.tril(torch.ones(3, 3)) -> 
+    ```python
+    tensor([[1., 0., 0.],
+            [1., 1., 0.],
+            [1., 1., 1.]])
+    ```
+    MatMul this with attention scores (Q @ K^T) to get a mask that is 0 for future tokens and 1 for present tokens.

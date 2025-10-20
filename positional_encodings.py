@@ -9,7 +9,7 @@ import torch.nn as nn
 import math
 
 
-def pos_encoding(position: int, d_model: int):
+def pos_encoding(position: int, d_model: int): # simple
     
     if position == 0 or d_model <= 0:
         return -1
@@ -42,8 +42,8 @@ def sinusoidal_positional_encoding(seq_len, d_model):
     - Sinusoidal allows extrapolation to longer sequences than seen during training
     
     Formula:
-        PE(pos, 2i)   = sin(pos / 10000^(2i/d_model))
-        PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model))
+        PE(pos, 2i)   = sin(pos / 10000^(2i/d_model)) # even pos
+        PE(pos, 2i+1) = cos(pos / 10000^(2i/d_model)) # odd pos
     
     Args:
         seq_len: Length of the sequence (e.g., number of tokens)
@@ -57,12 +57,18 @@ def sinusoidal_positional_encoding(seq_len, d_model):
     position = torch.arange(seq_len, dtype=torch.float).unsqueeze(1)
     
     # Step 2: Create dimension indices and compute div_term
-    # For i in [0, 2, 4, ..., d_model-2], compute 10000^(i/d_model)
-    # We use exp(log trick) for numerical stability
-    div_term = torch.exp(
-        torch.arange(0, d_model, 2, dtype=torch.float) * 
-        -(math.log(10000.0) / d_model)
-    )
+    # For i in [0, 2, 4, ..., d_model-2], compute 1/10000^(i/d_model)
+    # Mathematical equivalence (log/exp trick):
+    #   1/10000^(i/d_model) = 10000^(-i/d_model)
+    #                       = e^(ln(10000^(-i/d_model)))    [since a = e^(ln(a))]
+    #                       = e^((-i/d_model) * ln(10000))  [since ln(a^b) = b*ln(a)]
+    # NOTE: exp/log is more numerically stable than torch.pow(10000, i/d_model) because:
+    #   - Avoids overflow/underflow from large powers (10000^x can be huge or tiny)
+    #   - exp operates in log-space where numbers stay in reasonable ranges
+    #   - Reduces floating-point precision errors from repeated multiplications
+    i = torch.arange(0, d_model, 2, dtype=torch.float)  # [0, 2, 4, ...]
+    exponent = -(i / d_model) * math.log(10000.0)      # -(i/d_model) * ln(10000)
+    div_term = torch.exp(exponent)                      # e^(-(i/d_model) * ln(10000))
     # Shape: (d_model/2,)
     
     # Step 3: Initialize PE matrix

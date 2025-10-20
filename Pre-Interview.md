@@ -15,4 +15,20 @@ PyTorch Round 1:
 9. GPT2 Architecture (decoder-only architecture)
 10. Broadcasting Rules for Tensors v.s Matrices
 11. Dot Product v.s Matmul
-12. 
+12. Important Torch APIs:
+    - torch.sum()
+    - torch.mean()
+    - torch.round()
+    - torch.exp()
+    - torch.log()
+    - torch.sqrt()
+    - torch.pow()
+    - torch.mul()
+    - torch.div()
+    - torch.add()
+    - torch.sub()
+    - torch.matmul()
+    - torch.tril()
+    - torch.as_tensor()
+    - torch.dot()
+    - torch.where()

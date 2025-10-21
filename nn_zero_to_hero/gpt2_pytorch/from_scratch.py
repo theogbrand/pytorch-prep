@@ -40,6 +40,20 @@ class SelfAttentionHead(nn.Module):
         out = wei @ V
         return out
 
+
+class MultiHeadAttention(nn.Module):
+    def __init__(self, n_heads, head_size):
+        super().__init__()
+        self.heads = nn.ModuleList([SelfAttentionHead(head_size) for _ in range(n_heads)])
+        self.proj = nn.Linear(n_heads * head_size, n_embd)
+        self.dropout = nn.Dropout(dropout_p)
+
+    def forward(self, x):
+        out = torch.cat([h(x) for h in self.heads], dim=-1)
+        out = self.dropout(self.proj(out)) 
+        return out
+
+
 class GPTLanguageModel(nn.Module):
     def __init__(self):
         super().__init__()

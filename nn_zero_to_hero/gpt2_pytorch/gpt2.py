@@ -132,7 +132,7 @@ class Block(nn.Module):
 
     def forward(self, x):
         x = x + self.sa(self.ln1(x)) # LN Before SA
-        x = x + self.ffwd(self.ln2(x)) # Pre FFN LN
+        x = x + self.ffwd(self.ln2(x)) # Pre FFN LN # residuals are sequential, 2nd connection only applied AFTER attention
         return x
 
 class GPTLanguageModel(nn.Module):

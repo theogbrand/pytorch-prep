@@ -10,7 +10,26 @@ PyTorch Round 1:
         - The projection layer and residual connection work together but serve different purposes - the projection transforms the representation while the residual connection helps with gradient flow and feature preservation.
 2. SoftMax
     - Forward and Backward Pass (see CEL Makemore)
+3. Cross Entropy Loss/NLL
     - Cross Entropy Loss is essentially: -log(softmax(logits))[correct_indices].mean()
+    - Perplexity is just e^CELoss
+    - Clipping: torch.clip(probabilities, min=epsilon, max=1.0) to avoid log(0)
+    - When given logits:
+    ```python
+        logits_maxes = logits.max(dim=1, keepdim=True).values 
+        norm_logits = logits - logits_maxes 
+        counts = norm_logits.exp()
+        counts_sum = counts.sum(dim=1, keepdims=True)
+        counts_sum_inv = counts_sum**-1 
+        probs = counts * counts_sum_inv
+        logprobs = probs.log()
+        loss = -logprobs[range(batch_size), Yb].mean()
+    ```
+    - When given probabilities:
+    ```python
+        clipped_prob = torch.clip(probabilities, min=epsilon, max=1.0)
+        loss = -torch.log(clipped_prob[range(batch_size), Yb]).mean()
+    ```
 3. LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
     - BatchNorm for 2D tensor (B,C) input tensor; for large batch sizes >= 32, CV CNNs; Normalize ↓
     ```python

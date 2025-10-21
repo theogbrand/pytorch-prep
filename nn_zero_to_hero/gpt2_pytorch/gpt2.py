@@ -109,9 +109,9 @@ class FeedFoward(nn.Module):
     def __init__(self, n_embd):
         super().__init__()
         self.net = nn.Sequential(
-            nn.Linear(n_embd, 4 * n_embd),
+            nn.Linear(n_embd, 4 * n_embd), # following Vaswani to stretch the computation
             nn.ReLU(),
-            nn.Linear(4 * n_embd, n_embd),
+            nn.Linear(4 * n_embd, n_embd), # projection layer for residual connections
             nn.Dropout(dropout),
         )
 
@@ -127,12 +127,12 @@ class Block(nn.Module):
         head_size = n_embd // n_head
         self.sa = MultiHeadAttention(n_head, head_size)
         self.ffwd = FeedFoward(n_embd)
-        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln1 = nn.LayerNorm(n_embd) # Norm over Batch and Time dims, since it has C dims
         self.ln2 = nn.LayerNorm(n_embd)
 
     def forward(self, x):
-        x = x + self.sa(self.ln1(x))
-        x = x + self.ffwd(self.ln2(x))
+        x = x + self.sa(self.ln1(x)) # LN Before SA
+        x = x + self.ffwd(self.ln2(x)) # Pre FFN LN
         return x
 
 class GPTLanguageModel(nn.Module):

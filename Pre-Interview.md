@@ -18,8 +18,14 @@ PyTorch Round 1:
             output = torch.mul(s1, x2, out=output)
             ```
 2. SoftMax
-    - Forward and Backward Pass (see CEL Makemore)
-    - Happens in CEL, Attention Block
+    - Know how to compute Forward and Backward Pass from scratch (see CEL Makemore) - know sum over which dim
+    - Happens in:
+        a) CEL: F.cross_entropy(logits, targets)
+            - sum over vocab dim (classes), not time. dim=1 for B,T,C
+        b) Attention Block: wei = F.softmax(wei, dim=-1)  # (B, T, T)
+            - sum over keys dim, which is the last dim (recall what Q.K.T outputs -> the keys to attend to)
+        c) Generation/Sampling: F.softmax(logits, dim=-1) (B, C); idx_next = torch.multinomial(probs, num_samples=1) (B, 1)
+            - sum over vocab dim since logits shape (B, vocab_size)
 3. Cross Entropy Loss/NLL
     - Cross Entropy Loss is essentially: -log(softmax(logits))[correct_indices].mean()
     - Perplexity is just e^CELoss

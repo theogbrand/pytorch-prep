@@ -8,8 +8,16 @@ PyTorch Round 1:
         - n_dim = num_heads * head_size (Then head_size is determined last after n_dim and num_heads, by dividing n_dim by the number of heads)
     - Residual Connections: Add the input to the output of the attention block (x = x + MHA(x); x = x + FFN(x))
         - The projection layer and residual connection work together but serve different purposes - the projection transforms the representation while the residual connection helps with gradient flow and feature preservation.
+    - Activation Functions: 
+        - SwiGLU
+            ```python
+            x1, x2 = input[:N//2], input[N//2:] # splits the input into two halves
+            s1 = x1 * torch.sigmoid(x1)
+            output = torch.mul(s1, x2, out=output)
+            ```
 2. SoftMax
     - Forward and Backward Pass (see CEL Makemore)
+    - Happens in CEL, Attention Block
 3. Cross Entropy Loss/NLL
     - Cross Entropy Loss is essentially: -log(softmax(logits))[correct_indices].mean()
     - Perplexity is just e^CELoss

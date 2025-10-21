@@ -2,7 +2,12 @@ PyTorch Round 1:
 
 1. Attention Block
     - Masked, Sliding Window, ALiBi (https://leetgpu.com/challenges/attention-with-linear-biases)
-    - KV Cache Mechanics
+    - KV Cache Mechanics (https://www.deep-ml.com/deep-0/qg_107)
+    - [Positional Encoding](positional_encodings.py)
+    - Multi-Head Attention
+        - n_dim = num_heads * head_size (Then head_size is determined last after n_dim and num_heads, by dividing n_dim by the number of heads)
+    - Residual Connections: Add the input to the output of the attention block (x = x + MHA(x); x = x + FFN(x))
+        - The projection layer and residual connection work together but serve different purposes - the projection transforms the representation while the residual connection helps with gradient flow and feature preservation.
 2. SoftMax
     - Forward and Backward Pass (see CEL Makemore)
     - Cross Entropy Loss is essentially: -log(softmax(logits))[correct_indices].mean()
@@ -40,6 +45,8 @@ PyTorch Round 1:
 8. Transformers Vaswani Architecture (encoder-decoder architecture)
 9. GPT2 Architecture (decoder-only architecture)
 10. Broadcasting Rules for Tensors v.s Matrices
+    - Tensor BT, alights right first, then "add ones" on both, then BT over 1-dims ONLY
+    - Matrix BT, aligns LEFT first, BT over batch dims ONLY, and then check that matmul is valid with matching inner dims 
 11. Dot Product v.s Matmul
 12. Important Torch APIs:
     - torch.mean()

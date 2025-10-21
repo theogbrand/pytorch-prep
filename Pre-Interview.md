@@ -7,20 +7,29 @@ PyTorch Round 1:
     - Forward and Backward Pass (see CEL Makemore)
     - Cross Entropy Loss is essentially: -log(softmax(logits))[correct_indices].mean()
 3. LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
-    - BatchNorm for 2D tensor (B,C) input tensor; for large batch sizes >= 32, CV CNNs
+    - BatchNorm for 2D tensor (B,C) input tensor; for large batch sizes >= 32, CV CNNs; Normalize ↓
     ```python
         mean_t = torch.mean(input, dim=0, keepdim=True) # Batch Dim is 0
         sigma2_t = torch.pow(input - mean_t, 2).mean()
         x_norm_t = (input - mean_t) / torch.sqrt(sigma2_t + epsilon)
         return output.copy_(gamma * x_norm_t + beta)
     ```
-    - LayerNorm for 2D tensor (B,T,C) input tensor; NLP, different sample have different distributions, same behavior in training and inference
+    - LayerNorm for 2D tensor (B,T,C) input tensor; NLP, different sample have different distributions, same behavior in training and inference; Normalize →
     ```python
         mean_t = torch.mean(input, dim=-1, keepdim=True)
         sigma2_t = torch.var(input, dim=-1, keepdim=True, unbiased=True) # Kaparthy and Bessel's Correction are unbiased!!!
         x_norm_t = (input - mean_t) / torch.sqrt(sigma2_t + epsilon)
         return output.copy_(x_norm_t)
     ```
+    - Layer/BatchNorm1D -> Sequences or 0D (B,C); BatchNorm2D -> Images; BatchNorm3D -> Videos
+    - If asked to BatchNorm over Batch and Spatial Dimensions for 4D Tensor (B,C,H,W):
+        ```python
+            mean_t = input.mean(dim=(0,2,3), keepdim=True)
+            sigma2_t = input.var(dim=(0,2,3), keepdim=True, unbiased=True)
+            x_norm_t = (input - mean_t) / torch.sqrt(sigma2_t + epsilon)
+            return output.copy_(gamma * x_norm_t + beta)
+        ```
+        - equivalent to: output_builtin = nn.BatchNorm2d(x)
 4. Backward Pass Rules (Addition, Multiplication, Subtraction)
     - Common activation functions (ReLU, Sigmoid, Tanh, SwiGLU, SILU) derivatives
 5. CE/BCE Loss, MSE Loss

@@ -10,6 +10,9 @@ PyTorch Round 1:
         - n_dim = num_heads * head_size (Then head_size is determined last after n_dim and num_heads, by dividing n_dim by the number of heads)
     - Residual Connections: Add the input to the output of the attention block (x = x + MHA(x); x = x + FFN(x))
         - The projection layer and residual connection work together but serve different purposes - the projection transforms the representation while the residual connection helps with gradient flow and feature preservation.
+        - [FFN with Residual and Dropout](https://www.deep-ml.com/problems/178)
+            - Be clear to ask if 1) Residual connection BEFORE or AFTER dropout; 2) torch.round(x, decimals=4) OK or use torch.round(out * 10000) / 10000
+            - The trick is to save ```residual = x``` in the first line before any computations are done
     - Activation Functions: 
         - SwiGLU
             ```python
@@ -17,6 +20,8 @@ PyTorch Round 1:
             s1 = x1 * torch.sigmoid(x1)
             output = torch.mul(s1, x2, out=output)
             ```
+    - Dropout Layers (FP + BP)
+        - [Forward/Backward Pass Implementation](https://www.deep-ml.com/problems/151)
 2. SoftMax
     - Know how to compute Forward and Backward Pass from scratch (see CEL Makemore) - know sum over which dim
     - Happens in:

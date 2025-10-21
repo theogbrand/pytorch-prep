@@ -66,6 +66,7 @@ PyTorch Round 1:
         - equivalent to: output_builtin = nn.BatchNorm2d(x)
 4. Backward Pass Rules (Addition, Multiplication, Subtraction)
     - Common activation functions (ReLU, Sigmoid, Tanh, SwiGLU, SILU) derivatives
+    - [Single Neuron Backprop](https://www.deep-ml.com/problems/25)
 5. CE/BCE Loss, MSE Loss
     - Manual backward pass and computing loss per epoch for a simple 2-Layer MLP
 6. Count parameters in a 2-Layer MLP

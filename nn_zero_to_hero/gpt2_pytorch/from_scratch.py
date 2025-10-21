@@ -1,0 +1,8 @@
+import torch
+import torch.nn as nn
+from torch.nn import functional as F
+
+class GPTLanguageModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        

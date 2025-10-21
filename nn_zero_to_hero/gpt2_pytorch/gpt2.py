@@ -110,7 +110,7 @@ class FeedFoward(nn.Module):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_embd, 4 * n_embd), # following Vaswani to stretch the computation
-            nn.ReLU(),
+            nn.ReLU(), # Or use GELU()
             nn.Linear(4 * n_embd, n_embd), # projection layer for residual connections
             nn.Dropout(dropout),
         )

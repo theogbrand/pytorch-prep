@@ -9,3 +9,11 @@ class Linear(nn.Module):
     def forward(self, x):
         return x @ self.weight.T + self.bias+ self.bias
 ```
+
+# Vision Transformer (ViT)
+- Essentially the "Image Encoder". 
+    - Converts input image -> embedding of CLS token
+        - image -> patches -> patch embeddings + positional embeddings -> transformer blocks -> embedding of CLS token
+
+# Vision-Language Projection Module
+- Project image embedding to language embedding space (text embedding of Decoder text backbone)

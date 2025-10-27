@@ -17,3 +17,6 @@ class Linear(nn.Module):
 
 # Vision-Language Projection Module
 - Project image embedding to language embedding space (text embedding of Decoder text backbone)
+- Exactly like the final output projection layer in CLM, projects language embedding space to token vocabulary space
+    - e.g. Image Embedding (3D) -> Projection Module -> Text Embedding Space (2D)
+- Resulting Embedding then CONCAT with token embedding

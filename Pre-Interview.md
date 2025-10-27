@@ -122,3 +122,9 @@ PyTorch Round 1:
     - torch.arange()
 13. Important Torch Functions:
     - F.softmax()
+
+# Advanced:
+1. Vision Transformers
+    - Why do we CONCAT the image embedding (CLS Embedding from ViT encoder) with the token embedding (from Decoder text backbone) 
+        - BUT add the positional embedding
+        - Short Ans: Image is treated as separate token in the sequence. need to attend to it as a distinct element just like any other token

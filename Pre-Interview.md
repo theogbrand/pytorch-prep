@@ -126,5 +126,8 @@ PyTorch Round 1:
 # Advanced:
 1. Vision Transformers
     - Why do we CONCAT the image embedding (CLS Embedding from ViT encoder) with the token embedding (from Decoder text backbone) 
-        - BUT add the positional embedding
         - Short Ans: Image is treated as separate token in the sequence. need to attend to it as a distinct element just like any other token
+    - BUT add the positional embedding
+        - Each token needs both content and position information in the same embedding. Addition merges them while keeping same dimensionality.
+    - <image_pad> is a placeholder token for the image embedding. We eventually replace this with the actual image embedding (with same dimensionality as token embeddings)
+        - BUT these image embeddings ARE NOT a distinct token in the text token vocabulary at all!

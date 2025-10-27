@@ -1,8 +1,9 @@
 PyTorch Round 1:
 
 1. Attention Block
-    - Masked (https://www.deep-ml.com/problems/107)
-    - Sliding Window 
+    - Masked/Causal (https://www.deep-ml.com/problems/107)
+    - Sliding Window
+    - Flash Attention
     - ALiBi (https://leetgpu.com/challenges/attention-with-linear-biases)
     - KV Cache Mechanics (https://www.deep-ml.com/deep-0/qg_107)
     - [Positional Encoding](positional_encodings.py)

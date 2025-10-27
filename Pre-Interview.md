@@ -131,3 +131,9 @@ PyTorch Round 1:
         - Each token needs both content and position information in the same embedding. Addition merges them while keeping same dimensionality.
     - <image_pad> is a placeholder token for the image embedding. We eventually replace this with the actual image embedding (with same dimensionality as token embeddings)
         - BUT these image embeddings ARE NOT a distinct token in the text token vocabulary at all!
+        - Marker tokens <vision_start> and <vision_end> are used to mark the start and end of the image embedding in the sequence and are in the token vocab
+    - Number of <image_pad> tokens differs based on arch
+        - Single CLS token, only accept single image -> Early CLIP-based models
+        - Fixed multiple <image_pad> tokens, can accept single image. E.g. Llava-1.5 accept 336x336 image with each patch being 14x14 pixels
+        - Dynamic Tokens depending on resolution -> # Low resolution (224×224): 256 tokens; # High resolution (448×448): 1024 tokens
+        - Compressed Tokens (Learnable Reduction) -> BLIP-2 (Q-Former), compresses ViT output to fixed number like 32 compressed tokens always.

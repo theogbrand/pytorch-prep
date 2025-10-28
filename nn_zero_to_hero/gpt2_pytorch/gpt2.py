@@ -110,7 +110,7 @@ class FeedFoward(nn.Module):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_embd, 4 * n_embd), # following Vaswani to stretch the computation
-            nn.ReLU(), # Or use GELU()
+            nn.ReLU(), # Or use GELU() better
             nn.Linear(4 * n_embd, n_embd), # projection layer for residual connections
             nn.Dropout(dropout),
         )
@@ -201,7 +201,7 @@ m = model.to(device)
 print(sum(p.numel() for p in m.parameters())/1e6, 'M parameters')
 
 # create a PyTorch optimizer
-optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
+optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate) # MuOn nowadays
 
 for iter in range(max_iters):
 
@@ -219,7 +219,7 @@ for iter in range(max_iters):
     loss.backward()
     optimizer.step()
 
-# generate from the model
+# torch.zeros((1,1)) starts seq generation with a space character, generates 100 new tokens; generate operates in terms of batches
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
 print(decode(m.generate(context, max_new_tokens=500)[0].tolist()))
 #open('more.txt', 'w').write(decode(m.generate(context, max_new_tokens=10000)[0].tolist()))

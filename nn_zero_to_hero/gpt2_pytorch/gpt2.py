@@ -179,16 +179,16 @@ class GPTLanguageModel(nn.Module):
         return logits, loss
 
     def generate(self, idx, max_new_tokens):
-        # idx is (B, T) array of indices in the current context
+        # idx is (B, T) array of indices in the current context (independent sequences)
         for _ in range(max_new_tokens):
             # crop idx to the last block_size tokens
-            idx_cond = idx[:, -block_size:]
+            idx_cond = idx[:, -block_size:] # can only attend up to context length
             # get the predictions
-            logits, loss = self(idx_cond)
-            # focus only on the last time step
-            logits = logits[:, -1, :] # becomes (B, C)
+            logits, loss = self(idx_cond) # B,T,C
+            # focus only on the last time step, only need last step's attention score to sample next step
+            logits = logits[:, -1, :] # becomes (B, vocab_size)
             # apply softmax to get probabilities
-            probs = F.softmax(logits, dim=-1) # (B, C)
+            probs = F.softmax(logits, dim=-1) # (B, vocab_size)
             # sample from the distribution
             idx_next = torch.multinomial(probs, num_samples=1) # (B, 1)
             # append sampled index to the running sequence

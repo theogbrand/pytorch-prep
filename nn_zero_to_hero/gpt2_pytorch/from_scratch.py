@@ -7,7 +7,7 @@ dropout_p = 0.2
 block_size = 256 # context length
 n_layer = 6
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
-
+n_heads = 6
 with open('input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
@@ -88,7 +88,7 @@ class GPTLanguageModel(nn.Module):
         super().__init__()
         self.te = nn.Embedding(vocab_size, n_embd)
         self.pe = nn.Embedding(block_size, n_embd)
-        self.blocks = nn.Sequential(*[TransformerBlock() for _ in range(n_layer)])
+        self.blocks = nn.Sequential(*[TransformerBlock(n_embd=n_embd, n_heads=n_heads) for _ in range(n_layer)])
         self.ln = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size)
 
@@ -113,4 +113,12 @@ class GPTLanguageModel(nn.Module):
         return logits, loss
 
     def generate(self, idx, max_tokens):
-        return
+        for _ in range(max_tokens):
+            idx_condi = idx[:, -block_size:] # 
+            logits, _ = self(idx_condi) # B,T,vocab_size
+            logits = logits[:, -1, :] # only last token's scores -> B, vocab_size 
+            probs = F.softmax(logits, dim=-1) # across vocab scores
+            next_idx = torch.multinomial(probs, num_samples=1) # B, 1
+            idx = torch.cat([idx, next_idx], dim=1) # B, T+1
+        
+        return idx

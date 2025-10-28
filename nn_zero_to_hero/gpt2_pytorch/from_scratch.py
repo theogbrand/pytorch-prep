@@ -6,6 +6,7 @@ n_embd = 384
 dropout_p = 0.2
 block_size = 256 # context length
 n_layer = 6
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
 with open('input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
@@ -90,4 +91,26 @@ class GPTLanguageModel(nn.Module):
         self.blocks = nn.Sequential(*[TransformerBlock for _ in range(n_layer)])
         self.ln = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size)
+
+    def forward(self, idx, targets=None):
+        B, T = idx.shape # each token corresponding to vocab lookup table
+
+        tok_embd = self.te(idx) # B, T, C
+        pos_embd = self.pe(torch.arrange(T, device=device)) # B, T
+        x = tok_embd + pos_embd
+        x = self.blocks(x)
+        x = self.ln(x)
+        logits = self.lm_head(x)
         
+        if targets is None:
+            loss = None
+        else:
+            B, T, C = logits.shape
+            logits = logits.view(B*T, C)
+            targets = targets.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+        
+        return logits, loss
+
+    def generate(self, idx, max_tokens):
+        return

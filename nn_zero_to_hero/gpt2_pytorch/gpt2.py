@@ -157,7 +157,7 @@ class GPTLanguageModel(nn.Module):
         elif isinstance(module, nn.Embedding):
             torch.nn.init.normal_(module.weight, mean=0.0, std=0.02)
 
-    def forward(self, idx, targets=None):
+    def forward(self, idx, targets=None): # Note: Tokenized IDs are the input, no channel dim yet
         B, T = idx.shape
 
         # idx and targets are both (B,T) tensor of integers
@@ -172,7 +172,7 @@ class GPTLanguageModel(nn.Module):
             loss = None
         else:
             B, T, C = logits.shape
-            logits = logits.view(B*T, C)
+            logits = logits.view(B*T, C) # second dim must be Channel dim
             targets = targets.view(B*T)
             loss = F.cross_entropy(logits, targets)
 

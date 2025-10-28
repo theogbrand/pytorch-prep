@@ -137,3 +137,6 @@ PyTorch Round 1:
         - Fixed multiple <image_pad> tokens, can accept single image. E.g. Llava-1.5 accept 336x336 image with each patch being 14x14 pixels
         - Dynamic Tokens depending on resolution -> # Low resolution (224×224): 256 tokens; # High resolution (448×448): 1024 tokens
         - Compressed Tokens (Learnable Reduction) -> BLIP-2 (Q-Former), compresses ViT output to fixed number like 32 compressed tokens always.
+2. LoRa
+    - [MSFT Implementation](https://github.com/microsoft/LoRA/blob/main/loralib/layers.py)
+    - [TensorGym Easy Question](https://tensorgym.com/exercises/17)

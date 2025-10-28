@@ -5,6 +5,19 @@ from torch.nn import functional as F
 n_embd = 384
 dropout_p = 0.2
 block_size = 256 # context length
+n_layer = 6
+
+with open('input.txt', 'r', encoding='utf-8') as f:
+    text = f.read()
+
+# here are all the unique characters that occur in this text
+chars = sorted(list(set(text)))
+vocab_size = len(chars)
+# create a mapping from characters to integers
+stoi = { ch:i for i,ch in enumerate(chars) }
+itos = { i:ch for i,ch in enumerate(chars) }
+encode = lambda s: [stoi[c] for c in s] # encoder: take a string, output a list of integers
+decode = lambda l: ''.join([itos[i] for i in l]) # decoder: take a list of integers, output a string
 
 class FFN(nn.Module):
     def __init__(self, n_embd):
@@ -72,4 +85,9 @@ class TransformerBlock(nn.Module):
 class GPTLanguageModel(nn.Module):
     def __init__(self):
         super().__init__()
+        self.te = nn.Embedding(vocab_size, n_embd)
+        self.pe = nn.Embedding(block_size, n_embd)
+        self.blocks = nn.Sequential(*[TransformerBlock for _ in range(n_layer)])
+        self.ln = nn.LayerNorm(n_embd)
+        self.lm_head = nn.Linear(n_embd, vocab_size)
         

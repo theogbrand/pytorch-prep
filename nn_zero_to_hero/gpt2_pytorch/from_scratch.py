@@ -88,7 +88,7 @@ class GPTLanguageModel(nn.Module):
         super().__init__()
         self.te = nn.Embedding(vocab_size, n_embd)
         self.pe = nn.Embedding(block_size, n_embd)
-        self.blocks = nn.Sequential(*[TransformerBlock for _ in range(n_layer)])
+        self.blocks = nn.Sequential(*[TransformerBlock() for _ in range(n_layer)])
         self.ln = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size)
 
@@ -96,7 +96,7 @@ class GPTLanguageModel(nn.Module):
         B, T = idx.shape # each token corresponding to vocab lookup table
 
         tok_embd = self.te(idx) # B, T, C
-        pos_embd = self.pe(torch.arrange(T, device=device)) # B, T
+        pos_embd = self.pe(torch.arange(T, device=device)) # T, C - no unsqueeze needed since they align right
         x = tok_embd + pos_embd
         x = self.blocks(x)
         x = self.ln(x)

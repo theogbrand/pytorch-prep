@@ -87,8 +87,9 @@ PyTorch Round 1:
 8. Transformers Vaswani Architecture (encoder-decoder architecture)
 9. GPT2 Architecture (decoder-only architecture)
 10. Broadcasting Rules for Tensors v.s Matrices
-    - Tensor BT, alights right first, then "add ones" on both, then BT over 1-dims ONLY
-    - Matrix BT, aligns LEFT first, BT over batch dims ONLY, and then check that matmul is valid with matching inner dims 
+    - Tensor BT, alights right first, then "add ones" to the left of the smaller tensor or both(?), then BT over 1-dims ONLY
+    - Matrix BT, aligns LEFT(?) first, BT over batch dims ONLY, and then check that matmul is valid with matching inner dims
+        - For Matrice addition (elem-wise),  we can use tensor BT rules.
 11. Dot Product v.s Matmul
 12. Important Torch APIs:
     - torch.mean()

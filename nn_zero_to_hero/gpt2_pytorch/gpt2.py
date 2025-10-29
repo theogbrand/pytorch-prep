@@ -64,7 +64,7 @@ def estimate_loss():
 class Head(nn.Module):
     """ one head of self-attention """
 
-    def __init__(self, head_size):
+    def __init__(self, head_size): # head_size determined by n_embd//n_head cos we need to CONCAT later to get n_embd -> must be round number
         super().__init__()
         self.key = nn.Linear(n_embd, head_size, bias=False)
         self.query = nn.Linear(n_embd, head_size, bias=False)
@@ -116,7 +116,7 @@ class FeedFoward(nn.Module):
         )
 
     def forward(self, x):
-        return self.net(x)
+        return self.net(x) # no residual
 
 class Block(nn.Module):
     """ Transformer block: communication followed by computation """

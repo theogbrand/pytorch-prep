@@ -178,7 +178,7 @@ class GPTLanguageModel(nn.Module):
 
         return logits, loss
 
-    def generate(self, idx, max_new_tokens):
+    def generate(self, idx, max_new_tokens): # logits up to context length, from last step, generate and concat
         # idx is (B, T) array of indices in the current context (independent sequences)
         for _ in range(max_new_tokens):
             # crop idx to the last block_size tokens

@@ -122,8 +122,16 @@ class GPT2LanguageModel(nn.Module):
         
         return logits, loss
 
-    def generate(ix, max_output_tokens=None):
-        return
+    def generate(self, bix, max_output_tokens=None): # TODO
+        for _ in range(max_output_tokens):
+            cond_idx = bix[:, -block_size:] # TODO
+            logits, _ = self(cond_idx) # B,T,C
+            logits = logits[:, -1, :] # B, vocab_size
+            probs = F.softmax(logits, dim=-1) # B, vocab_size
+            next_idx = torch.multinomial(probs, num_samples=1) # TODO B,1
+            bix = torch.cat((bix, next_idx), dim=1) # B,T+1
+
+        return bix
 
 
 

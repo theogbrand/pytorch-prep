@@ -30,7 +30,7 @@ n = int(0.9*len(data))
 train_data = data[:n]
 val_data = data[n:]
 
-class FFN(nn.Module):
+class FFN(nn.Module): # Sequential
     def __init__(self, n_embd):
         super().__init__()
         self.net = nn.Sequential(
@@ -44,7 +44,7 @@ class FFN(nn.Module):
         x = self.net(x)
         return x
 
-class AttentionHead(nn.Module):
+class AttentionHead(nn.Module): # tril, masked_fill
     def __init__(self, head_size):
         super().__init__()
         self.head_size = head_size
@@ -67,7 +67,7 @@ class AttentionHead(nn.Module):
         out = wei @ V 
         return out
 
-class MHA(nn.Module):
+class MHA(nn.Module): # Combined Heads with ModuleList
     def __init__(self, n_heads, head_size): # TODO
         super().__init__()
         self.heads = nn.ModuleList([AttentionHead(head_size) for _ in range(n_heads)]) # TODO
@@ -79,7 +79,7 @@ class MHA(nn.Module):
         out = self.dropout(self.proj(out))
         return out
 
-class MHABlock(nn.Module):
+class MHABlock(nn.Module): # MHA+FFN+LN1/2 with residuals
     def __init__(self, n_embd, n_heads): # TODO
         super().__init__()
         head_size = n_embd // n_heads
@@ -94,7 +94,7 @@ class MHABlock(nn.Module):
         return out
 
 
-class GPTLanguageModel(nn.Module):
+class GPTLanguageModel(nn.Module): #PE, Inference/Training(eval) mode, Generate from last token -> get probas from logits using softmax
     def __init__(self):
         super().__init__()
         self.te = nn.Embedding(vocab_size, n_embd)

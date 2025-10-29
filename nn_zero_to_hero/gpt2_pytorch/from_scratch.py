@@ -137,11 +137,11 @@ class GPTLanguageModel(nn.Module):
 
 def get_batch(split):
     data = train_data if split == "train" else val_data
-    ix = torch.randint(len(data) - block_size, (block_size,)) # can only attend to max block size
-    x = torch.stack(data[idx:idx + block_size] for idx in ix)
-    y = torch.stack(data[idx+1:idx+block_size+1] for idx in ix)
-    x.to_device(device), y.to_device(device)
-    return
+    ix = torch.randint(len(data) - block_size, (batch_size,)) # can only attend to max block size
+    x = torch.stack([data[idx:idx + block_size] for idx in ix])
+    y = torch.stack([data[idx+1:idx+block_size+1] for idx in ix])
+    x,y = x.to_device(device), y.to_device(device)
+    return x, y
     
 @torch.no_grad()
 def estimate_loss():
@@ -150,7 +150,7 @@ def estimate_loss():
     for s in ['train', 'val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
-            Xb, Yb = get_batch()
+            Xb, Yb = get_batch(s)
             logits, loss = model(Xb, Yb)
             losses[k] = loss.item()
         loss = losses.mean()
@@ -163,7 +163,7 @@ m = model.to(device)
 
 print(sum(p.numel() for p in m.parameters())/1e6, "M parameters")
 
-optimizer = torch.optim.AdamW(model.parameters(), learning_rate=lr)
+optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
 
 max_iters = 5000
 eval_interval = 500
@@ -171,3 +171,10 @@ eval_interval = 500
 for i in range(max_iters):
     if i % eval_interval == 0 or i == max_iters - 1:
         loss = estimate_loss() # train + val loss
+
+    Xb, Yb = get_batch("train")
+
+    logits, loss = model(Xb,Yb)
+    optimizer.zero_grad(set_to_none=True)
+    loss.backward()
+    optimizer.step()

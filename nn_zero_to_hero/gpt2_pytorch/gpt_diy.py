@@ -94,6 +94,36 @@ class MHABlock(nn.Module):
 
 
 class GPT2LanguageModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.te = nn.Embedding(vocab_size, n_embd)
+        self.pe = nn.Embedding(block_size, n_embd)
+        self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)])
+        self.ln = nn.LayerNorm(n_embd)
+        self.lm_head = nn.Linear(n_embd, vocab_size)
+
+    def forward(self, ix, targets=None):
+        T,C = ix.shape
+
+        te = self.te(ix)
+        pe = self.pe(torch.arange(T, device=device)) # TODO
+        x = te + pe
+        x = self.blocks(x)
+        x = self.ln(x)
+        logits = self.lm_head(x)
+
+        if targets is None:
+            loss = None
+        else:
+            B,T,C = x.shape
+            logits = logits.view(B*T, C) # TODO
+            targets = targets.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+        
+        return logits, loss
+
+    def generate(ix, max_output_tokens=None):
+        return
 
 
 

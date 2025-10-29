@@ -35,13 +35,14 @@ class FFN(nn.Module):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(n_embd, 4 * n_embd),
-            nn.GELU,
+            nn.GELU(),
             nn.Linear(4*n_embd, n_embd),
             nn.Dropout(dropout_p)
         )
 
     def forward(self, x):
         x = self.net(x)
+        return x
 
 class AttentionHead(nn.Module):
     def __init__(self, head_size):
@@ -59,7 +60,7 @@ class AttentionHead(nn.Module):
         Q = self.q(x)
         K = self.k(x)
         V = self.v(x)
-        qk_t = Q @ K.transpose(-2, -1) / self.head_size**-0.5 # TODO
+        qk_t = Q @ K.transpose(-2, -1) * self.head_size**-0.5 # TODO
         wei = qk_t.masked_fill(self.tril[:T, :T] == 0, float("-inf")) # TODO
         wei = F.softmax(wei, dim=-1)
         wei = self.dropout(wei)
@@ -88,12 +89,12 @@ class MHABlock(nn.Module):
         self.ln2 = nn.LayerNorm(n_embd)
 
     def forward(self, x):
-        out = self.mha(self.ln1(x))
-        out = self.ffn(self.ln2(out))
+        out = x + self.mha(self.ln1(x)) # TODO
+        out = out + self.ffn(self.ln2(out))
         return out
 
 
-class GPT2LanguageModel(nn.Module):
+class GPTLanguageModel(nn.Module):
     def __init__(self):
         super().__init__()
         self.te = nn.Embedding(vocab_size, n_embd)
@@ -103,7 +104,7 @@ class GPT2LanguageModel(nn.Module):
         self.lm_head = nn.Linear(n_embd, vocab_size)
 
     def forward(self, ix, targets=None):
-        T,C = ix.shape
+        B,T = ix.shape
 
         te = self.te(ix)
         pe = self.pe(torch.arange(T, device=device)) # TODO
@@ -115,7 +116,7 @@ class GPT2LanguageModel(nn.Module):
         if targets is None:
             loss = None
         else:
-            B,T,C = x.shape
+            B,T,C = logits.shape
             logits = logits.view(B*T, C) # TODO
             targets = targets.view(B*T)
             loss = F.cross_entropy(logits, targets)
@@ -181,4 +182,4 @@ for i in range(max_iters):
     optimizer.step()
 
 ctx = torch.zeros([1,1], dtype=torch.long, device=device) # 1 char, 1 batch
-print(decode(m.generate(ctx, max_tokens=500)[0].tolist()))
+print(decode(m.generate(ctx, max_output_tokens=500)[0].tolist()))

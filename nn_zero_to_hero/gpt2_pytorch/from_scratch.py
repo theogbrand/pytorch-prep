@@ -1,6 +1,9 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+from pathlib import Path
+
+from nn_zero_to_hero.gpt2_pytorch.gpt2 import learning_rate
 
 n_embd = 384
 dropout_p = 0.2
@@ -8,7 +11,8 @@ block_size = 256 # context length
 n_layer = 6
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_heads = 6
-with open('input.txt', 'r', encoding='utf-8') as f:
+lr = 1e-4
+with open(Path(__file__).parent / 'input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # here are all the unique characters that occur in this text
@@ -122,3 +126,40 @@ class GPTLanguageModel(nn.Module):
             idx = torch.cat([idx, next_idx], dim=1) # B, T+1
         
         return idx
+
+# data loading
+def get_batch(split):
+    # generate a small batch of data of inputs x and targets y
+    data = train_data if split == 'train' else val_data
+    ix = torch.randint(len(data) - block_size, (batch_size,))
+    x = torch.stack([data[i:i+block_size] for i in ix])
+    y = torch.stack([data[i+1:i+block_size+1] for i in ix])
+    x, y = x.to(device), y.to(device)
+    return x, y
+
+@torch.no_grad()
+def estimate_loss():
+    out = {}
+    model.eval()
+    for split in ['train', 'val']:
+        losses = torch.zeros(eval_iters)
+        for k in range(eval_iters):
+            X, Y = get_batch(split)
+            logits, loss = model(X, Y)
+            losses[k] = loss.item()
+        out[split] = losses.mean()
+    model.train()
+    return out
+
+model = GPTLanguageModel()
+m = model.to(device)
+
+print(sum(p.numel() for p in m.parameters())/1e6, "M parameters")
+
+optimizer = torch.optim.AdamW(model.parameters(), learning_rate=lr)
+
+max_iters = 5000
+eval_interval = 500
+
+for i in range(max_iters):
+    if i % eval_interval == 0 or i == max_iters - 1:

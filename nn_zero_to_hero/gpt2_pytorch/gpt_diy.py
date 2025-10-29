@@ -79,6 +79,19 @@ class MHA(nn.Module):
         return out
 
 class MHABlock(nn.Module):
+    def __init__(self, n_embd, n_heads): # TODO
+        super().__init__()
+        head_size = n_embd // n_heads
+        self.mha = MHA(n_heads, head_size)
+        self.ffn = FFN(n_embd)
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
+
+    def forward(self, x):
+        out = self.mha(self.ln1(x))
+        out = self.ffn(self.ln2(out))
+        return out
+
 
 class GPT2LanguageModel(nn.Module):
 

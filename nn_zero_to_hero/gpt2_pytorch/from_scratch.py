@@ -162,6 +162,9 @@ model = GPTLanguageModel()
 m = model.to(device)
 
 print(sum(p.numel() for p in m.parameters())/1e6, "M parameters")
+print("Generating before training")
+ctx = torch.zeros([1,1], dtype=torch.long, device=device) # 1 char, 1 batch
+print(decode(m.generate(ctx, max_tokens=500)[0].tolist()))
 
 optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
 
@@ -171,6 +174,7 @@ eval_interval = 500
 for i in range(max_iters):
     if i % eval_interval == 0 or i == max_iters - 1:
         loss = estimate_loss() # train + val loss
+        print(f"step {i} train loss: {loss["train"]}, val loss: {loss["val"]}")
 
     Xb, Yb = get_batch("train")
 

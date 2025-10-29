@@ -46,6 +46,7 @@ class FFN(nn.Module):
 class AttentionHead(nn.Module):
     def __init__(self, head_size):
         super().__init__()
+        self.head_size = head_size
         self.q = nn.Linear(n_embd, head_size)
         self.k = nn.Linear(n_embd, head_size)
         self.v = nn.Linear(n_embd, head_size)
@@ -53,8 +54,29 @@ class AttentionHead(nn.Module):
         self.dropout = nn.Dropout(dropout_p)
 
     def forward(self, x):
+        B,T,C = x.shape
+        
+        Q = self.q(x)
+        K = self.k(x)
+        V = self.v(x)
+        qk_t = Q @ K.transpose(-2, -1) / self.head_size**-0.5 # TODO
+        wei = qk_t.masked_fill(self.tril[:T, :T] == 0, float("-inf")) # TODO
+        wei = F.softmax(wei, dim=-1)
+        wei = self.dropout(wei)
+        out = wei @ V 
+        return out
 
 class MHA(nn.Module):
+    def __init__(self, n_heads, head_size): # TODO
+        super().__init__()
+        self.heads = nn.ModuleList([AttentionHead(head_size) for _ in range(n_heads)]) # TODO
+        self.proj = nn.Linear(head_size * n_heads, n_embd)
+        self.dropout = nn.Dropout(dropout_p)
+
+    def forward(self, x):
+        out = torch.cat([h(x) for h in self.heads], dim=-1) # TODO
+        out = self.dropout(self.proj(out))
+        return out
 
 class MHABlock(nn.Module):
 

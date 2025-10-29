@@ -140,7 +140,7 @@ def get_batch(split):
     ix = torch.randint(len(data) - block_size, (batch_size,)) # can only attend to max block size
     x = torch.stack([data[idx:idx + block_size] for idx in ix])
     y = torch.stack([data[idx+1:idx+block_size+1] for idx in ix])
-    x,y = x.to_device(device), y.to_device(device)
+    x,y = x.to(device), y.to(device)
     return x, y
     
 @torch.no_grad()

@@ -178,3 +178,6 @@ for i in range(max_iters):
     optimizer.zero_grad(set_to_none=True)
     loss.backward()
     optimizer.step()
+
+ctx = torch.zeros([1,1], dtype=torch.long, device=device) # 1 char, 1 batch
+print(decode(m.generate(ctx, max_tokens=500)[0].tolist()))

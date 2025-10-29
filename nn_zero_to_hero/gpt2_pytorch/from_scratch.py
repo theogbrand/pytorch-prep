@@ -12,6 +12,9 @@ n_layer = 6
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_heads = 6
 lr = 1e-4
+batch_size = 64
+eval_iters = 200
+
 with open(Path(__file__).parent / 'input.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
@@ -23,6 +26,11 @@ stoi = { ch:i for i,ch in enumerate(chars) }
 itos = { i:ch for i,ch in enumerate(chars) }
 encode = lambda s: [stoi[c] for c in s] # encoder: take a string, output a list of integers
 decode = lambda l: ''.join([itos[i] for i in l]) # decoder: take a list of integers, output a string
+
+data = torch.tensor(encode(text), dtype=torch.long) # int64
+n = int(0.9*len(data))
+train_data = data[:n]
+val_data = data[n:]
 
 class FFN(nn.Module):
     def __init__(self, n_embd):
@@ -127,27 +135,26 @@ class GPTLanguageModel(nn.Module):
         
         return idx
 
-# data loading
 def get_batch(split):
-    # generate a small batch of data of inputs x and targets y
-    data = train_data if split == 'train' else val_data
-    ix = torch.randint(len(data) - block_size, (batch_size,))
-    x = torch.stack([data[i:i+block_size] for i in ix])
-    y = torch.stack([data[i+1:i+block_size+1] for i in ix])
-    x, y = x.to(device), y.to(device)
-    return x, y
-
+    data = train_data if split == "train" else val_data
+    ix = torch.randint(len(data) - block_size, (block_size,)) # can only attend to max block size
+    x = torch.stack(data[idx:idx + block_size] for idx in ix)
+    y = torch.stack(data[idx+1:idx+block_size+1] for idx in ix)
+    x.to_device(device), y.to_device(device)
+    return
+    
 @torch.no_grad()
 def estimate_loss():
     out = {}
     model.eval()
-    for split in ['train', 'val']:
+    for s in ['train', 'val']:
         losses = torch.zeros(eval_iters)
         for k in range(eval_iters):
-            X, Y = get_batch(split)
-            logits, loss = model(X, Y)
+            Xb, Yb = get_batch()
+            logits, loss = model(Xb, Yb)
             losses[k] = loss.item()
-        out[split] = losses.mean()
+        loss = losses.mean()
+        out[s] = loss
     model.train()
     return out
 
@@ -163,3 +170,4 @@ eval_interval = 500
 
 for i in range(max_iters):
     if i % eval_interval == 0 or i == max_iters - 1:
+        loss = estimate_loss() # train + val loss

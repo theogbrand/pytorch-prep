@@ -220,6 +220,6 @@ for iter in range(max_iters):
     optimizer.step()
 
 # torch.zeros((1,1)) starts seq generation with a space character, generates 100 new tokens; generate operates in terms of batches
-context = torch.zeros((1, 1), dtype=torch.long, device=device)
-print(decode(m.generate(context, max_new_tokens=500)[0].tolist()))
+context = torch.zeros((1, 1), dtype=torch.long, device=device) # no batch
+print(decode(m.generate(context, max_new_tokens=500)[0].tolist())) # no batch so only need the first
 #open('more.txt', 'w').write(decode(m.generate(context, max_new_tokens=10000)[0].tolist()))

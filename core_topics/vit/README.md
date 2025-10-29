@@ -10,6 +10,8 @@ class Linear(nn.Module):
         return x @ self.weight.T + self.bias+ self.bias
 ```
 
+Image -> Vision Encoder (Contains CLIP/SigLip to "project" image into a token sequence via 2D convolutions, then goes through a Transformer Encoder itself)-> Embedding of CLS token (different dims from text embeddings) -> Vision-Language Projection Module (MLP to project image embedding to text embedding space) -> Text Embedding Space (Now we can append CLS embedding between special image delimitter tokens <image_start> and <image_end> together with the text tokens) - CONCAT (usually at front) to sequence not add -> Any Decoder Text Backbone -> Output
+
 # Vision Transformer (ViT)
 - Essentially the "Image Encoder". 
     - Converts input image -> embedding of CLS token

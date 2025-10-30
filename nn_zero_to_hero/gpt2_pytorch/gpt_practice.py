@@ -30,9 +30,19 @@ n = int(0.9*len(data))
 train_data = data[:n]
 val_data = data[n:]
 
-
-
-
+class FFN(nn.Module):
+    def __init__(self, n_embd):
+        super().__init__()
+        self.net(nn.Sequential([
+            nn.Linear(n_embd, 4*n_embd),
+            nn.GELU(),
+            nn.Linear(4*n_embd, n_embd),
+            nn.Dropout(dropout_p)
+        ]
+        ))
+    def forward(self, x):
+        x = self.net(x)
+        return x
 
 
 def get_batch(split):

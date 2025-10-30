@@ -87,6 +87,35 @@ class TransformerBlock(nn.Module):
     def forward(self, x):
         x = x + self.mha(self.ln1(x))
         return x + self.ffn(self.ln2(x))
+
+class GPTLanguageModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.token_embd = nn.Embedding(vocab_size, n_embd)
+        self.pos_embd = nn.Embedding(block_size, n_embd)
+        self.blocks = nn.Sequential(*[TransformerBlock(n_embd, n_heads) for _ in range(n_layers)])
+        self.ln = nn.LayerNorm(n_embd)
+        self.lm_head = nn.Linear(n_embd, vocab_size)
+    
+    def forward(self, ix, target=None):
+        B, T = ix.shape
+        te = self.token_embd(ix)
+        pe = torch.arange(T, device=device)
+        x = te + pe
+        x = self.blocks(x)
+        x = self.ln(x)
+        logits = self.lm_head(x)
+
+        if not target:
+            loss = None
+        else:
+            B,T,C = logits.shape
+            logits = logits.view(B*T, C)
+            targets = logits.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+        
+        return logits, loss
+
          
 
 def get_batch(split):

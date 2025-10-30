@@ -27,6 +27,9 @@ PyTorch Round 1:
             ```
     - Dropout Layers (FP + BP)
     - [**Single Neuron Forward + Backward Pass Implementation**](https://www.deep-ml.com/problems/25)
+    - [FFN Forward + Backward Pass Implementation](https://www.deep-ml.com/problems/40)
+        - **F.linear() is a low level function, differing from nn.Linear(); so we need to transpose the weight matrix manually when applying F.linear(X, W.t(), b) because F.linear() does not transpose the weight matrix for us.
+            - in nn.Linear(), the weights are naturally stored in transposed form - somehow generalizes downstream even though we will define them as nn.Linear(in_features, out_features) in the forward pass
 2. SoftMax
     - Know how to compute Forward and Backward Pass from scratch (see CEL Makemore) - know sum over which dim
     - Happens in:
@@ -83,7 +86,8 @@ PyTorch Round 1:
         - equivalent to: output_builtin = nn.BatchNorm2d(x)
 4. *Optimizers*: AdamW, RMSProp, SGD, AdaGrad, AdaDelta, Adam, etc.
     - [Adam](https://www.deep-ml.com/problems/49)
-4. Backward Pass Rules (Addition, Multiplication, Subtraction)
+4. BackProp (Addition, Multiplication, Subtraction)
+    - Goal is to compute grad_input using grad_output (grad accum from previous layer) and local derivative of the operation
     - Common activation functions (ReLU, Sigmoid, Tanh, SwiGLU, SILU) derivatives
     - [Single Neuron Backprop](https://www.deep-ml.com/problems/25)
 5. CE/BCE Loss, MSE Loss
@@ -138,6 +142,12 @@ PyTorch Round 1:
     self.heads = nn.ModuleList(MHA(head_size) for _ in range(n_heads)) # multiple heads in parallel
     x = torch.cat([h(x) for x in self.heads], dim=-1) # merge the parallel computed heads 
     self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)]) # GPT multiple blocks
+    ```
+15. Useful Functions:
+    - For processing data
+    ```python
+    def _to_tensor(x: torch.Tensor | np.ndarray) -> torch.Tensor:
+        return x if isinstance(x, torch.Tensor) else torch.as_tensor(x, dtype=torch.float32)
     ```
 # Advanced:
 1. Vision Transformers

@@ -2,13 +2,15 @@ PyTorch Round 1:
 
 1. Attention Block
     - Masked/Causal (https://www.deep-ml.com/problems/107)
-    - Sliding Window
+    - [Sliding Window](https://leetgpu.com/challenges/sliding-window-self-attention)
     - Flash Attention
-    - ALiBi (https://leetgpu.com/challenges/attention-with-linear-biases)
-    - KV Cache Mechanics (https://www.deep-ml.com/deep-0/qg_107)
-    - [Positional Encoding](positional_encodings.py)
-    - Multi-Head Attention
+    - [Multi-Head Attention](https://leetgpu.com/challenges/multi-head-attention)
+        - Don't be afraid to append tensors into an array and torch.cat them later!
         - n_dim = num_heads * head_size (Then head_size is determined last after n_dim and num_heads, by dividing n_dim by the number of heads)
+    -Positional Encoding
+        - Sin/Cos, RoPe Learned [Positional Encoding](positional_encodings.py)
+        - ALiBi (https://leetgpu.com/challenges/attention-with-linear-biases)
+    - KV Cache Mechanics (https://www.deep-ml.com/deep-0/qg_107)
     - Residual Connections: Add the input to the output of the attention block (x = x + MHA(x); x = x + FFN(x))
         - The projection layer and residual connection work together but serve different purposes - the projection transforms the representation while the residual connection helps with gradient flow and feature preservation.
         - [FFN with Residual and Dropout](https://www.deep-ml.com/problems/178)
@@ -22,7 +24,7 @@ PyTorch Round 1:
             output = torch.mul(s1, x2, out=output)
             ```
     - Dropout Layers (FP + BP)
-        - [Forward/Backward Pass Implementation](https://www.deep-ml.com/problems/151)
+    - [**Single Neuron Forward + Backward Pass Implementation**](https://www.deep-ml.com/problems/25)
 2. SoftMax
     - Know how to compute Forward and Backward Pass from scratch (see CEL Makemore) - know sum over which dim
     - Happens in:

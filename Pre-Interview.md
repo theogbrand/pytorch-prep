@@ -7,7 +7,7 @@ Functions:
 1. Attention Block
     - Quadratic Problem
     - Long Context Problem
-    - Masked/Causal (https://www.deep-ml.com/problems/107)
+    - [Masked/Causal](https://www.deep-ml.com/problems/107)
     - [Sliding Window](https://leetgpu.com/challenges/sliding-window-self-attention)
         - Mask requires distance between tokens to operationalize the "sliding window"
         ```python
@@ -22,8 +22,8 @@ Functions:
         - n_dim = num_heads * head_size (Then head_size is determined last after n_dim and num_heads, by dividing n_dim by the number of heads)
     -Positional Encoding
         - Sin/Cos, RoPe Learned [Positional Encoding](positional_encodings.py)
-        - ALiBi (https://leetgpu.com/challenges/attention-with-linear-biases)
-    - KV Cache Mechanics (https://www.deep-ml.com/deep-0/qg_107)
+        - [ALiBi](https://leetgpu.com/challenges/attention-with-linear-biases)
+    - [KV Cache Mechanics](https://www.deep-ml.com/deep-0/qg_107)
     - Residual Connections: Add the input to the output of the attention block (x = x + MHA(x); x = x + FFN(x))
         - The projection layer and residual connection work together but serve different purposes - the projection transforms the representation while the residual connection helps with gradient flow and feature preservation.
         - [FFN with Residual and Dropout](https://www.deep-ml.com/problems/178)
@@ -173,6 +173,17 @@ Functions:
     self.heads = nn.ModuleList(MHA(head_size) for _ in range(n_heads)) # multiple heads in parallel
     x = torch.cat([h(x) for x in self.heads], dim=-1) # merge the parallel computed heads 
     self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)]) # GPT multiple blocks
+    ```
+
+    ```python
+    dw, db = torch.autograd.grad(
+			outputs=out,
+			inputs=[self.W, self.b],
+			grad_outputs=accum_grad 
+		)
+    if self.trainable and self._opt:
+			with torch.no_grad():
+				self.W.copy_(self._opt.update(self.W,dw))
     ```
 15. Useful Functions:
     - For processing data

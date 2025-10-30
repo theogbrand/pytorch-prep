@@ -62,7 +62,7 @@ class AttentionHead(nn.Module):
         wei = qk_t.masked_fill(self.tril[:T, :T] == 0, float("-inf")) # B,T,T
         wei = F.softmax(wei, dim=-1) # over the Keys
         wei = self.dropout(wei) # TODO: before matmul with V
-        out = wei @ V
+        out = wei @ V # TODO: NO Transpose of V
         return out
 
 class MHA(nn.Module):

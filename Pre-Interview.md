@@ -1,8 +1,16 @@
 PyTorch Round 1:
 
 1. Attention Block
+    - Quadratic Problem
+    - Long Context Problem
     - Masked/Causal (https://www.deep-ml.com/problems/107)
     - [Sliding Window](https://leetgpu.com/challenges/sliding-window-self-attention)
+        - Mask requires distance between tokens to operationalize the "sliding window"
+        ```python
+        idx = torch.arange(M, device=device)
+        mask = (idx[None,:] - idx[:,None]) > Window_Size # for casual LLM. For bidirectional, add a .abs(); window >= 2 obvious
+        # now at token 5, if Window_Size = 2, then token 5 can attend to token 3 and 4 (and itself), but not token 0,1,2
+        ```
     - Flash Attention
     - [Multi-Head Attention](https://leetgpu.com/challenges/multi-head-attention)
         - Don't be afraid to append tensors into an array and torch.cat them later!
@@ -18,6 +26,20 @@ PyTorch Round 1:
             - Be clear to ask if 1) Residual connection BEFORE or AFTER dropout; 2) torch.round(x, decimals=4) OK or use torch.round(out * 10000) / 10000
             - The trick is to save ```residual = x``` in the first line before any computations are done
         - [Dropout Forward + Backward Pass Implementation](https://www.deep-ml.com/problems/151)
+            Forward Pass:
+                ```python
+                mask = np.random.binomial(1, 1-p, size=x.shape) -> implicitly zeros out with probability p
+                x = x * mask / (1-p) # Normalization scaling factor, "inverted dropout"
+                ```
+                PyTorch:
+                ```python
+                mask = torch.bernoulli(torch.ones(x.shape) * (1-p))
+                x = x * mask / (1-p)
+                ```
+            Backward Pass:
+                ```python
+                dx = out.grad * mask / (1-p) -> because FP we multiply this to x
+                ```
     - Activation Functions: 
         - SwiGLU
             ```python
@@ -61,6 +83,7 @@ PyTorch Round 1:
     ```
 3. *Normalizations*: LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
     - [RMSNorm](https://leetgpu.com/challenges/rms-normalization)
+        - The RMS elem is a torch.sqrt(1/N * torch.sum(input**2 + eps)) -> sqrt average of the sum
     - BatchNorm for 2D tensor (B,C) input tensor; for large batch sizes >= 32, CV CNNs; Normalize ↓
     ```python
         mean_t = torch.mean(input, dim=0, keepdim=True) # Batch Dim is 0

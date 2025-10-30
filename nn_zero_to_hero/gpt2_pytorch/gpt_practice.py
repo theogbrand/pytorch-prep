@@ -68,6 +68,7 @@ class AttentionHead(nn.Module):
 
 class MHA(nn.Module):
     def __init__(self, n_heads, head_size):
+        super().__init__()
         self.heads = nn.ModuleList(AttentionHead(head_size) for _ in range(n_heads)) 
         self.proj = nn.Linear(n_heads*head_size, n_embd)
         self.dropout = nn.Dropout(dropout_p)
@@ -78,6 +79,20 @@ class MHA(nn.Module):
         x = self.dropout(x)
         return x
 
+class MHATransformerBlock(nn.Module):
+    def __init__(self, n_embd, n_heads):
+        super().__init__()
+        head_size = n_embd // n_heads
+        assert n_embd % n_heads == 0, "n_embd must be divisible by n_heads whole"
+        self.ffn = FFN(n_embd)
+        self.mha = MHA(n_heads, head_size)
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
+
+    def forward(self, x):
+        x = x + self.mha(self.ln1(x))
+        out = x + self.ffn(self.ln2(x))
+        return out
 
 def get_batch(split):
     data = train_data if split == "train" else val_data

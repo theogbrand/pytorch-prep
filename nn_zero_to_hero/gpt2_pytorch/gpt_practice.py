@@ -44,6 +44,27 @@ class FFN(nn.Module):
         x = self.net(x)
         return x
 
+class AttentionHead(nn.Module):
+    def __init__(self, head_size):
+        super().__init__()
+        self.head_size = head_size
+        self.queries = nn.Linear(n_embd, head_size)
+        self.keys = nn.Linear(n_embd, head_size)
+        self.values = nn.Linear(n_embd, head_size)
+        self.register_buffer("tril", torch.tril(torch.ones[block_size, block_size]))
+        self.dropout = nn.Dropout(dropout_p)
+
+    def forward(self, x):
+        B,T,C = x.shape
+        Q = self.queries(x) 
+        K = self.keys(x)
+        V = self.values(x)
+        qk_t = Q @ K.transpose(1,2) * self.head_size**-0.5 # TODO -> masked_fill comes after this***
+        wei = qk_t.masked_fill(self.tril[:T, :T] == 0, float("-inf")) # B,T,T
+        wei = F.softmax(wei, dim=-1) # over the Keys
+        out = self.dropout(wei) # before matmul with V
+        wei = wei @ V
+        return out
 
 def get_batch(split):
     data = train_data if split == "train" else val_data

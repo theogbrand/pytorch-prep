@@ -48,7 +48,7 @@ class AttentionHead(nn.Module):
         self.queries = nn.Linear(n_embd, head_size) # CONCAT later which is why out_dim=head_size 
         self.keys = nn.Linear(n_embd, head_size)
         self.values = nn.Linear(n_embd, head_size)
-        self.register_buffer("tril", torch.tensor(torch.ones((block_size, block_size))))
+        self.register_buffer("tril", torch.tril(torch.ones((block_size, block_size))))
         self.dropout = nn.Dropout(dropout_p)
     
     def forward(self, x):
@@ -100,19 +100,19 @@ class GPTLanguageModel(nn.Module):
     def forward(self, ix, target=None):
         B, T = ix.shape
         te = self.token_embd(ix)
-        pe = torch.arange(T, device=device)
+        pe = self.pos_embd(torch.arange(T, device=device))
         x = te + pe
         x = self.blocks(x)
         x = self.ln(x)
         logits = self.lm_head(x)
 
-        if not target:
+        if target is None:
             loss = None
         else:
             B,T,C = logits.shape
             logits = logits.view(B*T, C)
-            targets = logits.view(B*T)
-            loss = F.cross_entropy(logits, targets)
+            target = target.view(B*T)
+            loss = F.cross_entropy(logits, target)
         
         return logits, loss
 
@@ -173,4 +173,4 @@ for i in range(max_iters):
     optimizer.step()
 
 ctx = torch.zeros([1,1], dtype=torch.long, device=device) # 1 char, 1 batch
-print(decode(m.generate(ctx, max_output_tokens=500)[0].tolist()))
+print(decode(m.generate(ctx, max_new_tokens=500)[0].tolist()))

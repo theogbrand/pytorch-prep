@@ -42,6 +42,40 @@ class FFN(nn.Module):
     def forward(self, x):
         return self.net(x)
 
+class AttentionHead(nn.Module):
+    def __init__(self, head_size):
+        super().__init__()
+        self.queries = nn.Linear(n_embd, head_size) # CONCAT later which is why out_dim=head_size 
+        self.keys = nn.Linear(n_embd, head_size)
+        self.values = nn.Linear(n_embd, head_size)
+        self.register_buffer("tril", torch.tensor(torch.ones((block_size, block_size))))
+        self.dropout = nn.Dropout(dropout_p)
+    
+    def forward(self, x):
+        B,T,C = x.shape
+        Q,K,V = self.queries(x), self.keys(x), self.values(x)
+        scores = Q @ K.transpose(-2,-1) / (K.shape[-1])**0.5
+        wei = scores.masked_fill(self.tril[:T, :T] == 0, float("-inf"))
+        wei = F.softmax(wei, dim=-1)
+        wei = self.dropout(wei)
+        out = wei @ V
+        return out
+
+        
+class MultiHeadAttention(nn.Module):
+    def __init__(self, n_heads, head_size):
+        super().__init__()
+        self.heads = nn.ModuleList([AttentionHead(head_size) for _ in range(n_heads)]) 
+        self.proj = nn.Linear(n_heads * head_size, n_embd)
+        self.dropout = nn.Dropout(dropout_p)
+    
+    def forward(self, x):
+        x = torch.cat([h(x) for h in self.heads], dim=-1)
+        return self.dropout(self.proj(x))
+
+
+class TransformerBlock(nn.Module):
+     
 
 def get_batch(split):
     data = train_data if split == "train" else val_data

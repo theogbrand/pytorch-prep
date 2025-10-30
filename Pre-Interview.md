@@ -174,6 +174,19 @@ Functions:
     x = torch.cat([h(x) for x in self.heads], dim=-1) # merge the parallel computed heads 
     self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)]) # GPT multiple blocks
     ```
+    -> remember in Attention there is a Dropout of scores BEFORE the Matmul with Values
+    -> in MHA the channel dim is head_size
+    -> no transpose of V when out @ V
+    -> self.proj = nn.Linear(n_heads*head_size, n_embd) 
+    -> self.token_embd = nn.Embedding(vocab_size, n_embd) # TODO input is vocab
+    -> self.position_embd = nn.Embedding(block_size, n_embd) # input is ctx length
+    -> pe = self.position_embd(torch.arange(T, device=device)) # just created new tensor move to GPU
+    -> next_idx = torch.multinomial(proba, num_samples=1) # B, 1
+    -> all keepdim=-1 except for generate()
+    -> 3 Classes with Dropout (FFN, Head, MHA), 2 LayerNorms for Attention Block, 1 LayerNorm for GPTClass right after blocks before the LM Head
+    -> Forward to calculate logits and loss; if no targets, loss = None;
+    -> in GPT, reshape logits to (B*T, C) and targets to (B*T) for CE Loss (Requirement for F.cross_entropy())
+    -> in generate(), we need proba from logits of final token via softmax, then sample from the distribution using multnomial sampling
 
     ```python
     dw, db = torch.autograd.grad(

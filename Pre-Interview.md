@@ -123,7 +123,15 @@ PyTorch Round 1:
     - torch.arange()
 13. Important Torch Functions:
     - F.softmax()
-
+14. The most difficult lines:
+    ```python
+    self.register_buffer("tril", torch.ones([block_size,block_size])) # causal attention mask
+    torch.matrix_fill(self.tril[:T, :T] == 0, float("-inf")) # mask out the future tokens
+    qk_t = Q @ K.transpose(-2, -1) * self.head_size**-0.5 # MHA attention denominator
+    self.heads = nn.ModuleList(MHA(head_size) for _ in range(n_heads)) # multiple heads in parallel
+    x = torch.cat([h(x) for x in self.heads], dim=-1) # merge the parallel computed heads 
+    self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)]) # GPT multiple blocks
+    ```
 # Advanced:
 1. Vision Transformers
     - Why do we CONCAT the image embedding (CLS Embedding from ViT encoder) with the token embedding (from Decoder text backbone) 

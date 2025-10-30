@@ -75,7 +75,19 @@ class MultiHeadAttention(nn.Module):
 
 
 class TransformerBlock(nn.Module):
-     
+    def __init__(self, n_embd, n_heads):
+        super().__init__()
+        self.head_size = n_embd // n_heads
+        assert n_embd % n_heads == 0, "n_embd n_heads must be divisible by zero"
+        self.ffn = FFN(n_embd)
+        self.mha = MultiHeadAttention(n_heads, self.head_size)
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.ln2 = nn.LayerNorm(n_embd)
+
+    def forward(self, x):
+        x = x + self.mha(self.ln1(x))
+        return x + self.ffn(self.ln2(x))
+         
 
 def get_batch(split):
     data = train_data if split == "train" else val_data

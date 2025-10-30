@@ -33,13 +33,12 @@ val_data = data[n:]
 class FFN(nn.Module):
     def __init__(self, n_embd):
         super().__init__()
-        self.net(nn.Sequential([
+        self.net = nn.Sequential(
             nn.Linear(n_embd, 4*n_embd),
             nn.GELU(),
             nn.Linear(4*n_embd, n_embd),
             nn.Dropout(dropout_p)
-        ]
-        ))
+        ) # No List!
     def forward(self, x):
         x = self.net(x)
         return x
@@ -51,7 +50,7 @@ class AttentionHead(nn.Module):
         self.queries = nn.Linear(n_embd, head_size)
         self.keys = nn.Linear(n_embd, head_size)
         self.values = nn.Linear(n_embd, head_size)
-        self.register_buffer("tril", torch.tril(torch.ones[block_size, block_size]))
+        self.register_buffer("tril", torch.tril(torch.ones((block_size, block_size))))
         self.dropout = nn.Dropout(dropout_p)
 
     def forward(self, x):
@@ -59,17 +58,17 @@ class AttentionHead(nn.Module):
         Q = self.queries(x) 
         K = self.keys(x)
         V = self.values(x)
-        qk_t = Q @ K.transpose(1,2) * self.head_size**-0.5 # TODO -> masked_fill comes after this***
+        qk_t = Q @ K.transpose(-2,-1) * self.head_size**-0.5 # TODO -> masked_fill comes after this***
         wei = qk_t.masked_fill(self.tril[:T, :T] == 0, float("-inf")) # B,T,T
         wei = F.softmax(wei, dim=-1) # over the Keys
-        out = self.dropout(wei) # before matmul with V
-        wei = wei @ V
+        wei = self.dropout(wei) # TODO: before matmul with V
+        out = wei @ V
         return out
 
 class MHA(nn.Module):
     def __init__(self, n_heads, head_size):
         super().__init__()
-        self.heads = nn.ModuleList(AttentionHead(head_size) for _ in range(n_heads)) 
+        self.heads = nn.ModuleList([AttentionHead(head_size) for _ in range(n_heads)]) 
         self.proj = nn.Linear(n_heads*head_size, n_embd)
         self.dropout = nn.Dropout(dropout_p)
 
@@ -98,15 +97,15 @@ class GPTLanguageModel(nn.Module):
     def __init__(self):
         super().__init__()
         self.token_embd = nn.Embedding(vocab_size, n_embd) # TODO input is vocab
-        self.postion_embd = nn.Embedding(block_size, n_embd) # input is ctx length
+        self.position_embd = nn.Embedding(block_size, n_embd) # input is ctx length
         self.blocks = nn.Sequential(*[MHATransformerBlock(n_embd, n_heads) for _ in range(n_layers)])
         self.ln = nn.LayerNorm(n_embd) 
-        self.lm_head = self.Linear(n_embd, vocab_size)
+        self.lm_head = nn.Linear(n_embd, vocab_size)
 
     def forward(self, ix, targets=None): 
         B, T = ix.shape
         te = self.token_embd(ix)
-        pe = self.position_embd(torch.arange(T), device=device) # Check back
+        pe = self.position_embd(torch.arange(T, device=device)) # Check back
         x = te + pe
         x = self.blocks(x)
         x = self.ln(x)
@@ -128,8 +127,8 @@ class GPTLanguageModel(nn.Module):
             logits, _ = self(cond_ix) # B, T, C
             proba = F.softmax(logits, dim=-1) # TODO softmax over the vocab
             proba = proba[:,-1,:]
-            next_idx = torch.multinomial(proba, num_samples=1)
-            ix = torch.cat([ix, next_idx])
+            next_idx = torch.multinomial(proba, num_samples=1) # B, 1
+            ix = torch.cat([ix, next_idx], dim=1) # TODO important because over time sequence not channels
         return ix
 
 

@@ -6,7 +6,7 @@ from pathlib import Path
 n_embd = 384
 dropout_p = 0.2
 block_size = 256 # context length
-n_layer = 6
+n_layers = 6
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 n_heads = 6
 lr = 1e-4
@@ -93,6 +93,45 @@ class MHATransformerBlock(nn.Module):
         x = x + self.mha(self.ln1(x))
         out = x + self.ffn(self.ln2(x))
         return out
+
+class GPTLanguageModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.token_embd = nn.Embedding(vocab_size, n_embd) # TODO input is vocab
+        self.postion_embd = nn.Embedding(block_size, n_embd) # input is ctx length
+        self.blocks = nn.Sequential(*[MHATransformerBlock(n_embd, n_heads) for _ in range(n_layers)])
+        self.ln = nn.LayerNorm(n_embd) 
+        self.lm_head = self.Linear(n_embd, vocab_size)
+
+    def forward(self, ix, targets=None): 
+        B, T = ix.shape
+        te = self.token_embd(ix)
+        pe = self.position_embd(torch.arange(T), device=device) # Check back
+        x = te + pe
+        x = self.blocks(x)
+        x = self.ln(x)
+        logits = self.lm_head(x)
+
+        if targets is None: # TODO
+            loss = None
+        else: 
+            B,T,C = logits.shape
+            logits = logits.view(B*T,C)
+            targets = targets.view(B*T)
+            loss = F.cross_entropy(logits, targets)
+
+        return logits, loss
+
+    def generate(self, ix, max_new_tokens=100):
+        for _ in range(max_new_tokens):
+            cond_ix = ix[:, -block_size:] # remember
+            logits, _ = self(cond_ix) # B, T, C
+            proba = F.softmax(logits, dim=-1) # TODO softmax over the vocab
+            proba = proba[:,-1,:]
+            next_idx = torch.multinomial(proba, num_samples=1)
+            ix = torch.cat([ix, next_idx])
+        return ix
+
 
 def get_batch(split):
     data = train_data if split == "train" else val_data

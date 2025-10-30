@@ -98,8 +98,8 @@ class GPTLanguageModel(nn.Module): #PE, Inference/Training(eval) mode, Generate 
     def __init__(self):
         super().__init__()
         self.te = nn.Embedding(vocab_size, n_embd)
-        self.pe = nn.Embedding(block_size, n_embd)
-        self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)])
+        self.pe = nn.Embedding(block_size, n_embd) # lookup tables
+        self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)]) #TODO
         self.ln = nn.LayerNorm(n_embd)
         self.lm_head = nn.Linear(n_embd, vocab_size)
 

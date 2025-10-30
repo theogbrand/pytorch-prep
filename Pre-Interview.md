@@ -188,6 +188,7 @@ Functions:
     -> in GPT, reshape logits to (B*T, C) and targets to (B*T) for CE Loss (Requirement for F.cross_entropy())
     -> in generate(), we need proba from logits of final token via softmax, then sample from the distribution using multnomial sampling
     -> Layernorm in Attention Block is both Pre-Attention and Pre-FFN
+    -> in Generate(), don't forget to get ix_cond = ix[:, -block_size:]
 
     ```python
     dw, db = torch.autograd.grad(

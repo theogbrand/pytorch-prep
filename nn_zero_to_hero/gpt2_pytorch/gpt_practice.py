@@ -119,7 +119,8 @@ class GPTLanguageModel(nn.Module):
     def generate(self, ix, max_new_tokens=500):
         B, T = ix.shape
         for i in range(max_new_tokens):
-            logits, _ = self(ix)
+            ix_cond = ix[:, -block_size:]
+            logits, _ = self(ix_cond)
             logits = logits[:,-1,:] # B,T
             proba = F.softmax(logits, dim=-1) # B,T
             next_idx = torch.multinomial(proba, num_samples=1) # B,1

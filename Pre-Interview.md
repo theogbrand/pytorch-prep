@@ -6,6 +6,7 @@ PyTorch Round 1:
     - Flash Attention
     - [Multi-Head Attention](https://leetgpu.com/challenges/multi-head-attention)
         - Don't be afraid to append tensors into an array and torch.cat them later!
+            - Mindful of 2D or 3D, we are always CONCAT along the channels dimension (usually dim=-1)
         - n_dim = num_heads * head_size (Then head_size is determined last after n_dim and num_heads, by dividing n_dim by the number of heads)
     -Positional Encoding
         - Sin/Cos, RoPe Learned [Positional Encoding](positional_encodings.py)
@@ -16,6 +17,7 @@ PyTorch Round 1:
         - [FFN with Residual and Dropout](https://www.deep-ml.com/problems/178)
             - Be clear to ask if 1) Residual connection BEFORE or AFTER dropout; 2) torch.round(x, decimals=4) OK or use torch.round(out * 10000) / 10000
             - The trick is to save ```residual = x``` in the first line before any computations are done
+        - [Dropout Forward + Backward Pass Implementation](https://www.deep-ml.com/problems/151)
     - Activation Functions: 
         - SwiGLU
             ```python
@@ -55,6 +57,7 @@ PyTorch Round 1:
         loss = -torch.log(clipped_prob[range(batch_size), Yb]).mean()
     ```
 3. *Normalizations*: LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
+    - [RMSNorm](https://leetgpu.com/challenges/rms-normalization)
     - BatchNorm for 2D tensor (B,C) input tensor; for large batch sizes >= 32, CV CNNs; Normalize ↓
     ```python
         mean_t = torch.mean(input, dim=0, keepdim=True) # Batch Dim is 0
@@ -79,7 +82,7 @@ PyTorch Round 1:
         ```
         - equivalent to: output_builtin = nn.BatchNorm2d(x)
 4. *Optimizers*: AdamW, RMSProp, SGD, AdaGrad, AdaDelta, Adam, etc.
-    - [AdamW ]()
+    - [Adam](https://www.deep-ml.com/problems/49)
 4. Backward Pass Rules (Addition, Multiplication, Subtraction)
     - Common activation functions (ReLU, Sigmoid, Tanh, SwiGLU, SILU) derivatives
     - [Single Neuron Backprop](https://www.deep-ml.com/problems/25)
@@ -155,4 +158,4 @@ PyTorch Round 1:
     - [TensorGym Easy Question](https://tensorgym.com/exercises/17)
 
 3. MoE
-    - [TopK]()
+    - [TopK](https://leetgpu.com/challenges/top-k-selection)

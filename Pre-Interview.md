@@ -58,12 +58,17 @@ Functions:
         slope = alpha*x # all elem wise ops
         output = torch.where(x>0, x, negative_slope)
         ```
-    
+        - GELU:
+        ```python
+        cdf = 0.5 * (1+torch.erf(x/math.sqrt(2)))
+        output = x * cdf 
+        ```
         - SwiGLU
             ```python
-            x1, x2 = input[:N//2], input[N//2:] # splits the input into two halves
-            s1 = x1 * torch.sigmoid(x1)
-            output = torch.mul(s1, x2, out=output)
+            N = torch.shape[-1] # assuming 1D tensor, split on features
+            x1, x2 = x[:, :N//2], x[:, N//2:]
+            swish = x1 * sigmoid(x1)
+            output = swish * x2
             ```
     - Dropout Layers (FP + BP)
     - [**Single Neuron Forward + Backward Pass Implementation**](https://www.deep-ml.com/problems/25)

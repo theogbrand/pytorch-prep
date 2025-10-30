@@ -66,6 +66,19 @@ class AttentionHead(nn.Module):
         wei = wei @ V
         return out
 
+class MHA(nn.Module):
+    def __init__(self, n_heads, head_size):
+        self.heads = nn.ModuleList(AttentionHead(head_size) for _ in range(n_heads)) 
+        self.proj = nn.Linear(n_heads*head_size, n_embd)
+        self.dropout = nn.Dropout(dropout_p)
+
+    def forward(self, x):
+        x = torch.cat([h(x) for h in self.heads], dim=-1) # divy then join back
+        x = self.proj(x)
+        x = self.dropout(x)
+        return x
+
+
 def get_batch(split):
     data = train_data if split == "train" else val_data
     ix = torch.randint(len(data) - block_size, (batch_size,)) # can only attend to max block size

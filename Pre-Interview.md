@@ -226,3 +226,4 @@ Functions:
 
 3. MoE
     - [TopK](https://leetgpu.com/challenges/top-k-selection)
+    - [SeeMOE](https://huggingface.co/blog/AviSoori1x/makemoe2)

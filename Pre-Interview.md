@@ -167,24 +167,24 @@ Functions:
     - F.softmax()
 14. The most difficult lines:
     ```python
-    self.register_buffer("tril", torch.ones([block_size,block_size])) # causal attention mask
-    torch.matrix_fill(self.tril[:T, :T] == 0, float("-inf")) # mask out the future tokens
-    qk_t = Q @ K.transpose(-2, -1) * self.head_size**-0.5 # MHA attention denominator
+    self.register_buffer("tril", torch.ones((block_size,block_size))) # causal attention mask
+    scores = Q @ K.transpose(-2, -1) * self.head_size**-0.5 # MHA attention denominator
+    mask = torch.matrix_fill(self.tril[:T, :T] == 0, float("-inf")) # mask out the future tokens
     self.heads = nn.ModuleList(MHA(head_size) for _ in range(n_heads)) # multiple heads in parallel
     x = torch.cat([h(x) for x in self.heads], dim=-1) # merge the parallel computed heads 
     self.blocks = nn.Sequential(*[MHABlock(n_embd, n_heads) for _ in range(n_layer)]) # GPT multiple blocks
     ```
     -> remember in Attention there is a Dropout of scores BEFORE the Matmul with Values
-    -> in MHA the channel dim is head_size
+    -> in AttentionHead, the channel dim is head_size, so the out_dim=head_size, in_dim=n_embd
     -> no transpose of V when out @ V
     -> self.proj = nn.Linear(n_heads*head_size, n_embd) 
     -> self.token_embd = nn.Embedding(vocab_size, n_embd) # TODO input is vocab
     -> self.position_embd = nn.Embedding(block_size, n_embd) # input is ctx length
     -> pe = self.position_embd(torch.arange(T, device=device)) # just created new tensor move to GPU
     -> next_idx = torch.multinomial(proba, num_samples=1) # B, 1
-    -> all keepdim=-1 except for generate()
+    -> all keepdim=-1 except for generate() (but both 2D so can also dim=-1)
     -> 3 Classes with Dropout (FFN, Head, MHA), 2 LayerNorms for Attention Block, 1 LayerNorm for GPTClass right after blocks before the LM Head
-    -> Forward to calculate logits and loss; if no targets, loss = None;
+    -> In GPT, Forward to calculate logits and loss; if no targets, loss = None;
     -> in GPT, reshape logits to (B*T, C) and targets to (B*T) for CE Loss (Requirement for F.cross_entropy())
     -> in generate(), we need proba from logits of final token via softmax, then sample from the distribution using multnomial sampling
     -> Layernorm in Attention Block is both Pre-Attention and Pre-FFN

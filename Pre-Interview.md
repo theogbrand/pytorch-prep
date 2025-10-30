@@ -46,7 +46,19 @@ Functions:
                 ```python
                 dx = out.grad * mask / (1-p) -> because FP we multiply this to x
                 ```
-    - Activation Functions: 
+    - Activation Functions:
+        - ReLu:
+        ```python
+        zeros = torch.zeros_like(x)
+        output = torch.where(x>0, x, zeros)
+        ```
+        - Leaky ReLu:
+        ```python
+        alpha = 0.01
+        slope = alpha*x # all elem wise ops
+        output = torch.where(x>0, x, negative_slope)
+        ```
+    
         - SwiGLU
             ```python
             x1, x2 = input[:N//2], input[N//2:] # splits the input into two halves

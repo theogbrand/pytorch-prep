@@ -1,5 +1,9 @@
 PyTorch Round 1:
 
+Functions:
+- get_random_batch
+    - estimate train/val loss based on batch
+
 1. Attention Block
     - Quadratic Problem
     - Long Context Problem
@@ -111,6 +115,8 @@ PyTorch Round 1:
         - equivalent to: output_builtin = nn.BatchNorm2d(x)
 4. *Optimizers*: AdamW, RMSProp, SGD, AdaGrad, AdaDelta, Adam, etc.
     - [Adam](https://www.deep-ml.com/problems/49)
+        - trick is to initialize torch.zeros(params.shape) and then add the gradients to it;
+            - remember optimizer time step component is included
 4. BackProp (Addition, Multiplication, Subtraction)
     - Goal is to compute grad_input using grad_output (grad accum from previous layer) and local derivative of the operation
     - Common activation functions (ReLU, Sigmoid, Tanh, SwiGLU, SILU) derivatives

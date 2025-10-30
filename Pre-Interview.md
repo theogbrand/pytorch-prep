@@ -28,11 +28,13 @@ PyTorch Round 1:
         - [Dropout Forward + Backward Pass Implementation](https://www.deep-ml.com/problems/151)
             Forward Pass:
                 ```python
+                if not training: return x
                 mask = np.random.binomial(1, 1-p, size=x.shape) -> implicitly zeros out with probability p
                 x = x * mask / (1-p) # Normalization scaling factor, "inverted dropout"
                 ```
                 PyTorch:
                 ```python
+                if not training: return x
                 mask = torch.bernoulli(torch.ones(x.shape) * (1-p))
                 x = x * mask / (1-p)
                 ```

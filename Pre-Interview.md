@@ -54,7 +54,7 @@ PyTorch Round 1:
         clipped_prob = torch.clip(probabilities, min=epsilon, max=1.0)
         loss = -torch.log(clipped_prob[range(batch_size), Yb]).mean()
     ```
-3. LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
+3. *Normalizations*: LayerNorm (Pre/Post) v.s BatchNorm v.s RMSNorm
     - BatchNorm for 2D tensor (B,C) input tensor; for large batch sizes >= 32, CV CNNs; Normalize ↓
     ```python
         mean_t = torch.mean(input, dim=0, keepdim=True) # Batch Dim is 0
@@ -78,6 +78,8 @@ PyTorch Round 1:
             return output.copy_(gamma * x_norm_t + beta)
         ```
         - equivalent to: output_builtin = nn.BatchNorm2d(x)
+4. *Optimizers*: AdamW, RMSProp, SGD, AdaGrad, AdaDelta, Adam, etc.
+    - [AdamW ]()
 4. Backward Pass Rules (Addition, Multiplication, Subtraction)
     - Common activation functions (ReLU, Sigmoid, Tanh, SwiGLU, SILU) derivatives
     - [Single Neuron Backprop](https://www.deep-ml.com/problems/25)
@@ -151,3 +153,6 @@ PyTorch Round 1:
 2. LoRa
     - [MSFT Implementation](https://github.com/microsoft/LoRA/blob/main/loralib/layers.py)
     - [TensorGym Easy Question](https://tensorgym.com/exercises/17)
+
+3. MoE
+    - [TopK]()

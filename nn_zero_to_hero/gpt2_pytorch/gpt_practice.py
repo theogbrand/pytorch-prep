@@ -175,3 +175,41 @@ for i in range(max_iters):
 
 ctx = torch.zeros([1,1], dtype=torch.long, device=device) # 1 char, 1 batch
 print(decode(m.generate(ctx, max_new_tokens=500)[0].tolist()))
+
+
+
+# LoRa
+# transformed = F.linear(x, wt, b)
+# if self.r > 0 and not self.merged:
+#     x = self.lora_dropout(x)
+#     x = x @ self.loraA.transpose(-2,-1)
+#     x = x @ self.loraB.transpose(-2,-1)
+#     x = x * (self.lora_alpha/self.r) + transformed
+
+# else: 
+#     return transformed
+
+
+# for _ in range epochs:
+#     out = f_t @ w_t + b
+#     ht = torch.sigmoid(out)
+#     loss = torch.mean((ht-lt)**2)
+#     loss.append(loss.item())
+
+#     dht = 2*(ht-lt) * 1/batch_size
+#     dout = dht * (ht*(1-ht))
+#     # df_t = dout @ w_t.t()
+#     dW_t = f_t @ dout
+#     db = dout.sum(dim=0)
+
+#     w_t -= learning_rate * dwt
+
+# return torch.round(w_t, decimals=4).tolist()
+
+# pos = torch.arange(position, dtype=torch.float32).reshape(position, 1)
+# idx = torch.arange(d_model, dtype=torch.float32).reshape(1, d_model)
+
+# angle_rad = pos / torch.pow(10000, (2*(idx/2))/d_model)
+
+# angle_rad[:,0::2] = torch.sin(angle_rad[:, 0::2])
+# angle_rad[:,1::2] = torch.cos(angle_rad[:, 1::2])

@@ -195,7 +195,7 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - Action space integration
 - Embodied AI applications
 
-### 8.4 RNNs & LSTMs
+### 8.4 RNNs & LSTMs (Optional)
 - Historical context: RNNs → LSTMs → Transformers
 - Sequence modeling fundamentals
 
@@ -290,6 +290,13 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - RLHF (Reinforcement Learning from Human Feedback)
 - Policy optimization
 - Reward modeling
+
+#### RL Fundamentals
+- MDP
+- Deep Q Learning (DQN)
+- AlphaGo + AlphaZero + AlphaGoZero + AlphaStar + MuZero
+- AlphaFold
+- "Asynchronous Methods for Deep Reinforcement Learning" (A3C)
 
 ### 13.2 Project Knowledge
 - **VL-PRM** (Vision-Language Process Reward Model)

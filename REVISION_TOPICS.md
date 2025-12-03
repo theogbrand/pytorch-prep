@@ -292,6 +292,22 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - Policy optimization
 - Reward modeling
 
+### GRPO
+- Instead of scalar reward, use Advantage, which is the reward minus the baseline (average reward) so each reward is "normalized" -> stabllizes training
+- Instead of 3 components in PPO (Generation Policy - the updated one,Reference Policy - the original one, Reward Model - the model trained with RLHF to provide the reward), we only need 2 components (Generation Policy and Reference Policy)
+  - replacing the Reward Model with functions that rate all the rollouts using reward functions (REGEXES to check the formatting of the rollout, Run Linters/LSPs to check the validitity - and not correctness of the rollout) - limited to "verifiable" domains like math and code to some extent, difficult for non-verifiable, open-ended domains like creative writing, open-ended QA, etc.
+- GRPO Algorithm and KL-Divergence 
+  - GRPO 
+    - To go through the key terms in the algorithm again
+  - KL-Divergence
+    - In general is to ensure training stability and prevent too major updates each time
+- GRPO High Level
+  - Set of prompts you determine to run the model on to get the rollouts, then throw it at the reward functions to get the advantage for this rollout, then using the policy gradient to update the policy
+    - "How" to selecct the prompts is still an art. But typically sounds like throwing a whole bunch of prompts at the model and seeing many 0-rewards until positive rewards start to show up
+  - Usually we want to SFT the model first so the model doesn't have a "cold start", then run GRPO to elicit the desired behavior in a more sample efficient way (pass@32 or BoN=8 instead of pass@256 or BoN=32)
+    - Base pre-trained model -> SFT -> Pref FT -> RLVR
+    - also trending Pretrained Model -> Bypass SFT, Pref FT -> RLVR
+
 #### RL Fundamentals
 - MDP
 - Deep Q Learning (DQN)

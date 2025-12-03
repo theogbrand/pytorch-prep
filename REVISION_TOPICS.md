@@ -225,6 +225,7 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - Low-rank matrix decomposition
 - Efficient parameter updates
 - Rank selection
+- Thinking Machine's LoRa without Regret [Impl](https://github.com/michaelbzhu/lora-without-regret)
 
 **Resources:**
 - [Microsoft LoRA Implementation](https://github.com/microsoft/LoRA/blob/main/loralib/layers.py)

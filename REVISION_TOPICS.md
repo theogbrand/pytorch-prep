@@ -235,6 +235,8 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - FP16, FP32 considerations
 - Post-training quantization
 - Quantization-aware training
+- Point is we can reduce mem footpring while only slightly reducing accuracy
+  - the trick is to pick the right layers to quantize and those to keep in fp16
 
 ---
 

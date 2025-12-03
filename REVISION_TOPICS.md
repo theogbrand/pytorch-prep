@@ -296,7 +296,7 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - Instead of scalar reward, use Advantage, which is the reward minus the baseline (average reward) so each reward is "normalized" -> stabllizes training
 - Instead of 3 components in PPO (Generation Policy - the updated one,Reference Policy - the original one, Reward Model - the model trained with RLHF to provide the reward), we only need 2 components (Generation Policy and Reference Policy)
   - replacing the Reward Model with functions that rate all the rollouts using reward functions (REGEXES to check the formatting of the rollout, Run Linters/LSPs to check the validitity - and not correctness of the rollout) - limited to "verifiable" domains like math and code to some extent, difficult for non-verifiable, open-ended domains like creative writing, open-ended QA, etc.
-- GRPO Algorithm and KL-Divergence 
+- GRPO Algorithm and KL-Divergence (training stability + prevent overfitting) 
   - GRPO 
     - To go through the key terms in the algorithm again
   - KL-Divergence

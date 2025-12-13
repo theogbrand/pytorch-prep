@@ -248,6 +248,16 @@ A comprehensive, structured guide covering all essential topics for LLM research
 **Resources:**
 - [Knowledge Distillation Slides](https://drive.google.com/file/d/1xMohjQcTmQuUd_OiZ3hB1r47WB1WM3Am/view)
 
+### 10.4 Model Merging
+- Combining multiple fine-tuned models into a single model
+- Weight averaging and interpolation techniques
+- Task arithmetic (adding/subtracting task vectors)
+- Merging methods: SLERP, TIES, DARE
+- Applications: Multi-task learning, model ensembling without inference overhead
+
+**Resources:**
+- [Model Merging NeurIPS Paper](https://proceedings.neurips.cc/paper_files/paper/2022/file/70c26937fbf3d4600b69a129031b66ec-Paper-Conference.pdf)
+
 ---
 
 ## 11. Inference & Performance

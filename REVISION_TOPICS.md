@@ -238,6 +238,16 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - Point is we can reduce mem footpring while only slightly reducing accuracy
   - the trick is to pick the right layers to quantize and those to keep in fp16
 
+### 10.3 Knowledge Distillation
+- Teacher-student training paradigm
+- Transferring knowledge from large models to smaller models
+- Soft targets and temperature scaling
+- Distillation loss (combining hard and soft targets)
+- Applications: Model compression, deployment optimization
+
+**Resources:**
+- [Knowledge Distillation Slides](https://drive.google.com/file/d/1xMohjQcTmQuUd_OiZ3hB1r47WB1WM3Am/view)
+
 ---
 
 ## 11. Inference & Performance

@@ -280,6 +280,23 @@ A comprehensive, structured guide covering all essential topics for LLM research
 - Memory optimization
 - Throughput optimization
 
+### 11.4 Constrained Sampling/Decoding
+- **Context-Free Grammar (CFG)** for structured generation
+- Grammar-based decoding constraints
+- JSON schema enforcement
+- Structured output generation
+- Format validation during sampling
+
+**Resources:**
+- [OpenAI Structured Outputs](https://openai.com/index/introducing-structured-outputs-in-the-api/)
+
+### 11.5 Finite State Machines (FSMs)
+- **FSMs for LLM agents**
+- State transition modeling
+- Agent behavior control
+- Deterministic state management
+- Pattern matching and validation
+
 ---
 
 ## 12. PyTorch APIs & Functions
